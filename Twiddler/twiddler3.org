@@ -1,0 +1,88 @@
+* Twiddler3 Notes
+
+** Misc
+
+LED colors not as described
+
+Location of [] not as in tutor
+
+
+** Upgrades
+
+- Original :: Version = 0.14b
+
+I Upgraded to 0.15u and the keys repeated on pressing making
+chords not possible!  I downgraded to factory settings!
+
+- installed new firmware
+-- mv Twiddler_0.15u.hex /media/greg/C494-6732/twiddler.hex
+-- yadda yadda, verified new version
+-- keys repeating!
+- moved file back and reset with
+-- power-off, N+S while power-on
+-- verified back to 0.14b
+-- problem gone
+
+*** Procedure for upgrading
+
+https://twiddler.tekgear.com/doc/doku.php?id=firmwareupgrade
+
+Procedure for upgrading:
+
+-Preparing for the Upgrade
+--Plug into USB.
+--Identify which firmware you are running by pressing N+S 0R00.
+--Download and unzip the latest firmware here: Twiddler Firmware
+--Plug the Twiddler into a computer via USB, mount the flash drive, and copy the Twiddler_0.XXu.hex file to it.
+--Rename the .hex file to twiddler.hex.
+--Eject the flash drive using the OS's Eject function. It is critical that the .hex file is fully written to the drive so gracefully ejecting the drive is critical.
+--Power off the Twiddler.
+--Disconnect USB from Twiddler.
+-Begin the Upgrade
+--Make sure the Twiddler is unplugged from USB and remains unplugged in during the entire procedure.
+--Hold down N+S and power on the Twiddler. This will load the factory boot image. To verify this, type N+S 0R00. “Version x.xxb” should be typed out. (x.xx are numbers)
+--To start the upgrade procedure type N+S 000R.
+--The LED on the Twiddler will blink Red and Yellow during the upgrade. Do not plug in or turn off the Twiddler during this time.
+--Upon completion, The Twiddler will “reboot” and the LED will remain a solid color.
+--Plug the Twiddler back into USB or connect via Bluetooth.
+--Press N+S 0R00 to check to see if the new version has been installed correctly. It should type out “Version x.xx*u*” where x.xx is the version number of the firmware you downloaded.
+
+** Default Keymap
+
+- abcd
+- efgh
+- sp del bs ent
+
+L = red:
+- ijk
+- lmn
+- opq
+
+M = blue:
+- rst
+- uvw
+- xyz
+
+R = green:
+- .,;
+- '" nada
+- ?!-
+
+rrr- = esc
+MMM- = /
+lll- = \
+
+Something turned on my capslock - was it the twiddler?
+
+With numeric:
+1234567890 BS ENT
+
+SRR-- = >
+S-MM- = Super-left
+S-LL- = (
+S-RR- = NADA
+
+S--RR = ESC >
+S--MM = NADA
+S--LL = Super-next = (Emacs) Scroll-up-command
+
