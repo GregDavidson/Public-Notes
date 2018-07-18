@@ -1,16 +1,6 @@
-* Tuner
+* Creating CoolerHand with the Twiddler Tuner
 
-** Notation
-
-<Right Ctrl>p</Right Ctrl>
-<UpArrow>
-<DownArrow>
-<LeftArrow>
-<RightArrow>
-<PageUp>
-<PageDown>
-
-**
+** Tuner Notation
 
 | KEY	                    | SYNTAX                      |
 |--------------------------+-----------------------------|
@@ -34,7 +24,7 @@
 | F5	                     | <F5>                        |
 | F6	                     | <F6>                        |
 | F7	                     | <F7>                        |
-| F8	                     | <F8>                        |
+| F8	                     | <F8>                         |
 | F9	                     | <F9>                        |
 | F10	                    | <F10>                       |
 | F11	                    | <F11>                       |
@@ -88,47 +78,46 @@
 ** Settings
 
 Sticky "Shift" Button
-- is disabled
-- is it safe to enable it?
+- leave disabled!
 
 Sticky "Num" Button
-- is disabled
-- is it safe to enable it?
-- I did try and it got stuck!
+- leave disabled!
 
-Is there a key combo that will reset us w/o off/on?
+It would be so nice if these only went sticky when given a
+press/release!
 
 ** Extra Bndings
 
-000M = <NumLock>   # yikes!
-- It didn't seem to release!
-- So I added 
-- Num + LMM0 = <NumLock>
-- and that released it!
+I set the extra 3 keys at the top to be
+- mouse left, middle, right
+- left is redundant but no good options
+- unless firmware advances!
 
-So I then added:
-- LM00 = <CapsLock>
-- SHIFT + LM00 = <CapsLock>
+And I set the pointer click to
+- mouse left
+- redundant but no good options
 
-And I set the extra 3 keys at the top to be
-mouse left, middle, right
+** Misc
 
-And I set the pointer click to also be mouse left
+| 000M         | <NumLock>  | enters |
+| Num + LMM0   | <NumLock>  | exits  |
+| LM00         | <CapsLock> | enters |
+| SHIFT + LM00 | <CapsLock> | exits  |
 
-** Misc changes
+Reversed () [] {} <> /\
 
-Reversing () [] {} <> /\
-MRRR = " and " # added leading space
+| MRRR | " and " | added leading space |
 
 *** Removed trailing space
-M0MM = "the" # removed the trailing space
-L0LL = "you" # removed the trailing space
+
+| M0MM | "the" |
+| L0LL | "you  |
 
 *** Added trailing space
-MR00 = ", "
-00MM = ": "
-ML00 = "; "
 
+| MR00 | ", " |
+| 00MM | ": " |
+| ML00 | "; " |
 
 ** Num Mode
 
@@ -138,43 +127,44 @@ ML00 = "; "
 	- Movement Keys
 	- Other Non-Graphical Function Keys
 - Graphical Keypad Keys
-  - Not yet complete
 
 What else would we want to type when in Num Mode?
+- Plenty of multi-column codes available!
 
 *** Left
-1 .. 12 = F1 .. F12
 
-13 L0LL -- Unassigned
-14 0LLL Insert
-15 LLLL Delete
+| 1 .. 12 |      | F1 .. F 12 |
+|      13 | L0LL |            |
+|      14 | 0LLL | Insert     |
+|      15 | LLLL | Delete     |
+
 
 *** Middle
 
-1 .. 9 = 1 .. 9
-
-10 0M0M 10
-11 MM0M 11
-12 00MM Space
-13 M0MM ,
-14 0MMM BS
-15 MMMM 0
+| 1 .. 9 |      | 1 .. 9 |
+|     10 | 0M0M | 10     |
+|     11 | MM0M | 11     |
+|     12 | 00MM | Space  |
+|     13 | M0MM | ,      |
+|     14 | 0MMM | BS     |
+|     15 | MMMM | 0      |
 
 *** Right
 
- 1 R000 Up
- 2 0R00 Down
- 3 RR00 PageUp
- 4 00R0 Right
- 5 R0R0 <KP+>"
- 6 0RR0 <KP->
- 7 RRR0 Home
- 8 000R Left
- 9 R00R <KP*>
-10 0R0R <KP/>
-11 RR0R <KP.>
-12 00RR PageDown
-13 R0RR <KP=>
-14 0RRR End
-15 RRRR <KPEnter>
+|  1 | R000 | Up        |
+|  2 | 0R00 | Down      |
+|  3 | RR00 | PageUp    |
+|  4 | 00R0 | Right     |
+|  5 | R0R0 | <KP+>"    |
+|  6 | 0RR0 | <KP->     |
+|  7 | RRR0 | Home      |
+|  8 | 000R | Left      |
+|  9 | R00R | <KP*>     |
+| 10 | 0R0R | <KP/>     |
+| 11 | RR0R | <KP.>     |
+| 12 | 00RR | PageDown  |
+| 13 | R0RR | <KP=>     |
+| 14 | 0RRR | End       |
+| 15 | RRRR | <KPEnter> |
+
 
