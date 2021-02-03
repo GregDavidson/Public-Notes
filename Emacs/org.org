@@ -1,0 +1,11 @@
+* 
+#+TITLE: Org Features Worth Noting Down
+#+SUBTITLE: Subtitle!
+#+OPTIONS: toc:nil 
+#+OPTIONS: num:nil
+#+OPTIONS: date:nil 
+#+OPTIONS: author:nil 
+#+MACRO: NEWLINE @@latex:\\@@ @@html:<br>@@ @@ascii:|@@
+
+** First Section {{{NEWLINE}}} and More!
+

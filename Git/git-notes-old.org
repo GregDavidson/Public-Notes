@@ -1,0 +1,80 @@
+* Notes on Git and Git Workflows
+
+** Setting up a project repository
+
+mkdir PROJECT-DIRECTORY 
+cd PROJECT-DIRECTORY 
+git init
+
+** Put in key files
+
+Create or Copy & Customize
+	 
+- .git/description
+- .gitignore
+- LICENSE.md
+- README.md
+
+** Adding and committing
+
+#+BEGIN_SRC sh
+git status
+git add . # or add individual files
+git status
+git commit -m "first commit - or whatever"
+#+END_SRC
+
+** Mirroring it with GitHub
+
+#+BEGIN_SRC sh
+git remote add origin https://github.com/GregDavidson/wicci-core-S1_refs.git
+git push -u origin master
+#+END_SRC
+
+** Setting up a private server
+
+On the remote system:
+
+#+BEGIN_SRC sh
+mkdir PROJECT-DIRECTORY 
+cd PROJECT-DIRECTORY 
+git init --bare
+#+END_SRC
+
+On any client system:
+Create the git project directory as usual
+
+#+BEGIN_SRC sh
+git remote add origin [user@]remote-server:PATH/PROJECT-DIRECTORY
+git push origin master
+#+END_SRC
+
+Or if already created and pushed, clone it:
+#+BEGIN_SRC sh
+git clone ssh://remote-server/PROJECT-DIRECTORY
+#+END_SRC
+
+To change remote origin
+#+BEGIN_SRC sh
+git remote rm origin
+#+END_SRC
+
+** Merging Files
+
+# 1st commit mylocal changes
+
+#+BEGIN_SRC sh
+git fetch  # bring in remote commits
+git pull    # merge them in ??
+#+END_SRC
+
+** Merging Repositories
+
+Lots of ways to do it.  I followed the approach at
+
+[[https://saintgimp.org/2013/01/22/merging-two-git-repositories-into-one-repository-without-losing-file-history/][merging-two-git-repositories-into-one-repository-without-losing-file-history]]
+
+** Helpful GUIs
+
+- giggle
+- Emacs Magit

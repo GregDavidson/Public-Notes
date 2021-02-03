@@ -1,0 +1,45 @@
+* Bash Notes
+
+** Some suggestions from [[https://zwischenzugs.com/2018/01/06/ten-things-i-wish-id-known-about-bash/][Ten Things I Wish I'd Known About Bash]]
+
+*** Prefer double bracket tests
+
+#+BEGIN_SRC shell
+[ x"$foo" = x"$bar" ] # old
+[[ "$foo" = "$bar" ]] # nicer
+[[ $foo = $bar ]]			# ??
+[[ $(grep not_there /dev/null) = '' ]] # supposedly works
+#+END_SRC
+
+*** Stream redirection
+
+Reminder that the shell will create temporary files for us automatically
+
+#+BEGIN_SRC shell
+diff <(grep somestring file1) <(grep somestring file2)
+#+END_SRC
+
+*** Head of path shortcut
+
+#+BEGIN_SRC shell
+grep isthere /long/path/to/some/file/or/other.txt
+cd !$:h
+#+END_SRC
+
+Does this only work with history commands?
+
+And what else is like this?
+
+*** Reminder of _Here Strings_
+
+#+BEGIN_SRC shell
+cat > asd <<< 'This file has one line'
+#+END_SRC
+
+*** $RANDOM only gives 16 bits of randomness!
+
+To get 30 bits:
+
+#+BEGIN_SRC shell
+echo $(((RANDOM << 15) + RANDOM))
+#+END_SRC

@@ -1,0 +1,26 @@
+* Emacs Lisp Notes
+
+** Global Variables
+
+- defvar :: declare global variable
+						- only assigns value if variable is void, i.e. single-assignment
+- defconst :: declare global "constant"
+- boundp :: is symbol's value-cell non-void?
+- makunbound :: make symbol's value-cell void
+- symbol-value :: fetch global value of symbol
+
+symbol-value is useful when the symbol might be shadowed.
+
+When a package is configured by a global value and it wants to compile cleanly and not overwrite that value when customized:
+#+BEGIN_SRC elisp
+	(defvar *foo-1* (if (not (boundp '*foo-1*)) 0 (+ 1 (symbol-value '*foo-1*))))
+#+END_SRC
+
+* Files
+
+Remove symlinks in paths:
+- file-chase-links :: last path component normalized
+- file-truename :: all path components normalized
+Check existence and kind of file:
+- file-regular-p :: does the path exist as a regular file?
+- file-directory-p :: does the path exist as a regular file?

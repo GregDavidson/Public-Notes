@@ -1,0 +1,11 @@
+* Interesting Emacs Packages
+
+** [[https://gist.github.com/eschulte/6167923][curry-compose.el higher order functions]]
+
+** [[https://cask.readthedocs.io/en/latest/][Cask: Emacs Lisp Package Management Tool]]
+
+** [[https://github.com/rejeep/f.el][f.el: Modern API for working with files and directories in Emacs]]
+
+** org-context -- it's installed, look up it's info from list-packages
+
+It sounds like something I'd want, but is it?

@@ -1,0 +1,11 @@
+* GNU Tar Notes
+
+** tar --exclude-vcs-ignores
+
+Gnu tar 1.28 has option
+--exclude-vcs-ignores
+which almost works; it didn't ignore TAGS
+in the Rust-Shim but otherwise seemed to work:
+
+cd ../Rust-Shim
+tar cf ../rust-shim.tar --exclude-vcs --exclude-vcs-ignores --exclude-backups --exclude=target *  
