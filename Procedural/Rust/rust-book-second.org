@@ -1,0 +1,18 @@
+* Rust Book Second Edition - Notes
+
+** Interior Mutability with RefCell
+
+This should allow me to create global statics
+which must be initialized during the program
+initialization phase!
+
+init_state: InitState;
+foo: static1<Foo>(&init_state);
+
+
+main() {
+  init();
+	foo.set(Foo.new(whatever));
+	init_state.next();
+	doit_to_a_foo( foo.get() ); OK
+}

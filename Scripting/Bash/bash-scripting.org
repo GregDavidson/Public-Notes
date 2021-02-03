@@ -1,0 +1,43 @@
+*
+
+** Construction of an Argument Vector
+
+https://lwn.net/Articles/614218/
+
+Posted Oct 3, 2014 9:48 UTC (Fri) by Jandar (subscriber, #85683) [Link]
+With arrays the construction of an argument-vector is easy.
+
+#+BEGIN_SRC shell
+typeset -a Options Files
+Options+=("$option1")
+Files+=("$file1")
+$UseVerbose && Options+=("-v")
+$UseSecondFile && Files+=("$file2")
+command "${Options[@]}" -- "${Files[@]}"
+#+END_SRC
+
+** set is local to the function
+
+ositional parameters are scoped to the function. So the set
+-- construct only changes the function-local argument
+vector. In the following example, note that invocation of
+foo doesn't reset the positional parameters of 1 2 3 4 in
+the outer scope.
+
+#+BEGIN_SRC shell
+foo() {
+set -- A B C
+printf "$# -> $*\n"
+}
+
+printf "$# -> $*\n"
+set -- 1 2 3 4
+foo
+printf "$# -> $*\n"
+#+END_SRC
+
+Also, per POSIX: "Positional parameters are initially
+assigned when the shell is invoked (see sh), temporarily
+replaced when a shell function is invoked (see Function
+Definition Command), and can be reassigned with the set
+special built-in command."
