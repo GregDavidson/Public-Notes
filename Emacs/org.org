@@ -1,7 +1,7 @@
 * 
-#+TITLE: Org Features Worth Noting Down
-#+SUBTITLE: Subtitle!
-#+OPTIONS: toc:nil 
+#+TITLE: Org Mode Notes
+#+SUBTITLE:  Features Worth Noting Down
+#+SUBTITLE: toc:nil 
 #+OPTIONS: num:nil
 #+OPTIONS: date:nil 
 #+OPTIONS: author:nil 
@@ -9,3 +9,5 @@
 
 ** First Section {{{NEWLINE}}} and More!
 
+** Easy Templates NOW C-c C-,
+The old <s TAB and such are now replaced with C-c C-,
