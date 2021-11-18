@@ -308,3 +308,10 @@ Here's a couple of good ones:
 git config --global alias.unstage 'reset HEAD --'
 git config --global alias.last 'log -1 HEAD'
 #+END_SRC
+
+** Moving a file to a new repository WITH HISTORY
+
+#+BEGIN_SRC sh
+cd EXISTING REPOSITORY
+git log --pretty=email --patch-with-stat --reverse -- path/to/file_or_folder | (cd /path/to/new_repository && git am --committer-date-is-author-date)
+#+END_SRC
