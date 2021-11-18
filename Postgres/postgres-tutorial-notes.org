@@ -1,0 +1,28 @@
+* Notes from PostgreSQL Tutorial
+https://www.postgresqltutorial.com
+**  SELECT DISTINCT collapses NULLs!
+https://www.postgresqltutorial.com/postgresql-select-distinct/
+#+begin_src 
+#+end_src
+** BETWEEN with timestamps excludes high end?
+In the example
+#+begin_src sql
+SELECT
+   customer_id,
+   payment_id,
+   amount,
+ payment_date
+FROM
+   payment
+WHERE
+   payment_date BETWEEN '2007-02-07'
+AND '2007-02-15';
+#+end_src
+we don't see any dates on 2007-02-15 even though they exist because
+#+begin_src sql
+select cast( '2007-02-15' as timestamp);
+#+end_src
+returns
+| timestamp           |
+|---------------------|
+| 2007-02-15 00:00:00 |

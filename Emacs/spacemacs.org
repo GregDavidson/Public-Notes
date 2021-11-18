@@ -1,0 +1,47 @@
+* Spacemacs Notes
+
+| *Evil*          | *Emacs*       | *Description*           |
+| SP aka Spacebar | M-m aka Alt-m | Begin Spacemacs Binding |
+
+** Handy Commands to Learn
+
+| *Evil* | *Emacs* | *Spacemacs Function*   | *Notes*               |
+| SP T n | M-m T n | cycle-spacemacs-theme  |                       |
+| SP T s | M-m T s | helm-themes            |                       |
+| SP t S | M-m t s | toggle-syntax-checking | toggles spellchecking |
+
+** Temporary Font Scaling
+   
+| *Evil* | *Emacs* | *Description*                                       |
+| SP z f | M-m z f | Zoom all buffers in current frame including pop-ups |
+| SP z x | M-m z x | Scale the font of only the current buffer           |
+
+** Spacemacs Configuration
+
+| *Evil*   | *Command*                              | *Notes*       |
+| SP f e R | dotspacemacs/sync-configuration-layers | after editing .spacemacs |
+
+* Problem Reports
+
+On 3 November 2021 I downloaded spacemacs anew.  I'm using development mode.  When it rebuilt it said:
+#+BEGIN_EXAMPLE
+Warning (evil-collection): `evil-want-keybinding' was set to nil but not before loading evil.
+
+Make sure to set `evil-want-keybinding' to nil before loading evil or evil-collection.
+
+See https://github.com/emacs-evil/evil-collection/issues/60 for more details.
+#+END_EXAMPLE
+
+** Setting Environment Variables at Startup
+
+Spacemacs is giving me this message:
+
+#+BEGIN_EXAMPLE
+You appear to be setting environment variables ("PATH") in your .bashrc or .zshrc: those files are only read by interactive shells, so you should instead set environment variables in startup files like .profile, .bash_profile or .zshenv.  Refer to your shell’s man page for more info.  Customize ‘exec-path-from-shell-arguments’ to remove "-i" when done, or disable ‘exec-path-from-shell-check-startup-files’ to disable this message.
+#+END_EXAMPLE
+
+=org-list-indent-offset= is a variable defined in ‘org-list.el’.
+- Additional indentation for sub-items in a list.
+  - By setting this to a small number
+     - usually 1 or 2
+  - one can more clearly distinguish sub-items in a list.

@@ -1,0 +1,11 @@
+* Debian Package Management
+
+** Queries
+
+What package goes with a given path:
+- dpkg -S /path/to-file
+
+** Build Dependencies
+
+- apt-get build-dep <src-package>
+  - have to enable the source package

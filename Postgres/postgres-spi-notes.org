@@ -1,0 +1,152 @@
+* Postgres SPI notes
+
+** SPI Memory Management
+
+file:/usr/local/src/pgsql-pure/src/backend/utils/mmgr/README
+
+https://www.postgresql.org/docs/current/spi-memory.html
+
+*** SPI_returntuple — prepare to return a tuple as a Datum
+https://www.postgresql.org/docs/current/spi-spi-returntuple.html
+
+*** pg_detoast_datum_copy
+
+file:/usr/local/src/pgsql-pure/src/backend/utils/fmgr/fmgr.c
+
+struct varlena *
+pg_detoast_datum_copy(struct varlena *datum)
+- Make a (modifiable) copy of the varlena object with palloc
+
+#+BEGIN_SRC C
+// executor/spi.c line 211
+void
+SPI_start_transaction(void)
+{
+	MemoryContext oldcontext = CurrentMemoryContext;
+
+	StartTransactionCommand();
+	MemoryContextSwitchTo(oldcontext);
+}
+#+END_SRC
+#+BEGIN_SRC C
+// executor/spi.c line 1120
+void *
+SPI_palloc(Size size)
+{
+	if (_SPI_current == NULL)
+		elog(ERROR, "SPI_palloc called while not connected to SPI");
+
+	return MemoryContextAlloc(_SPI_current->savedcxt, size);
+}
+#+END_SRC
+_SPI_current is static, as are:
+#+BEGIN_SRC 
+// executor/spi.c line 2629
+static MemoryContext
+_SPI_execmem(void)
+{
+	return MemoryContextSwitchTo(_SPI_current->execCxt);
+}
+
+static MemoryContext
+_SPI_procmem(void)
+{
+	return MemoryContextSwitchTo(_SPI_current->procCxt);
+}
+#+END_SRC
+
+But note:
+#+BEGIN_SRC C
+// executor/spi.c line 
+
+int
+SPI_connect(void)
+{
+	return SPI_connect_ext(0);
+}
+
+int
+SPI_connect_ext(int options)
+{
+// ...
+	/* ... and switch to procedure's context */
+	_SPI_current->savedcxt = MemoryContextSwitchTo(_SPI_current->procCxt);
+
+// ...
+}
+#+END_SRC
+and MemoryContextSwitch{To,} are extern.
+
+We can save CurrentMemoryContext before we call SPI_connect!!!
+
+*** What if we can just copy the tup tables?
+
+We could avoid using C data structures at all!  Then we
+could simply refresh them as nneded.
+
+If we use direct procedure calls, we won't need any C cache!
+
+We may have trouble with FRONTEND macro or inline
+declaration if we include postgres.h in a .h file???
+
+#+BEGIN_SRC C
+/*
+ * Although this header file is nominally backend-only, certain frontend
+ * programs like pg_controldata include it via postgres.h.  For some compilers
+ * it's necessary to hide the inline definition of MemoryContextSwitchTo in
+ * this scenario; hence the #ifndef FRONTEND.
+ */
+
+#ifndef FRONTEND
+static inline MemoryContext
+MemoryContextSwitchTo(MemoryContext context)
+{
+	MemoryContext old = CurrentMemoryContext;
+
+	CurrentMemoryContext = context;
+	return old;
+}
+#endif							/* FRONTEND */
+#+END_SRC
+
+Data structure info at
+- file:/usr/local/src/pgsql-pure/src/include/access/htup.h
+- file:/usr/local/src/pgsql-pure/src/include/access/htup_details.h
+
+
+A tuple "attribute" seems to be yet another term for a field or column!
+
+#+BEGIN_SRC 
+// access/htup_details.h line 364
+/* ----------------
+ *		heap_getattr
+ *
+ *		Extract an attribute of a heap tuple and return it as a Datum.
+ *		This works for either system or user attributes.  The given attnum
+ *		is properly range-checked.
+ *
+ *		If the field in question has a NULL value, we return a zero Datum
+ *		and set *isnull == true.  Otherwise, we set *isnull == false.
+ *
+ *		<tup> is the pointer to the heap tuple.  <attnum> is the attribute
+ *		number of the column (field) caller wants.  <tupleDesc> is a
+ *		pointer to the structure describing the row and all its fields.
+ * ----------------
+ */
+#define heap_getattr(tup, attnum, tupleDesc, isnull) \
+	( \
+		((attnum) > 0) ? \
+		( \
+			((attnum) > (int) HeapTupleHeaderGetNatts((tup)->t_data)) ? \
+				getmissingattr((tupleDesc), (attnum), (isnull)) \
+			: \
+				fastgetattr((tup), (attnum), (tupleDesc), (isnull)) \
+		) \
+		: \
+			heap_getsysattr((tup), (attnum), (tupleDesc), (isnull)) \
+	)
+#+END_SRC
+
+I will need to get the field pointer while still in an SPI
+context as I will need SPI_tuptable->tupdesc.
+

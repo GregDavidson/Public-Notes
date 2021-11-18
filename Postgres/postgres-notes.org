@@ -1,0 +1,121 @@
+* Postgres Notes
+
+Merge with Postgres Notes under Wicci?  Anywhere else?
+
+** Table Functions ROWS FROM and WITH ORDINALITY and more!
+
+Very interesting features I didn't know about:
+
+https://www.postgresql.org/docs/12/queries-table-expressions.html
+
+WITH ORDINALITY might be a way I can preserve the order of, e.g. HTML Headers!!
+
+#+begin_src sql
+CREATE TABLE sal_emp (
+     name            text,
+     pay_by_quarter  integer[],
+     schedule        text[][]
+ );
+
+INSERT INTO sal_emp
+    VALUES ('Bill',
+    '{10000, 10000, 10000, 10000}',
+    '{{"meeting", "lunch"}, {"training", "presentation"}}');
+ 
+INSERT INTO sal_emp
+    VALUES ('Carol',
+    '{20000, 25000, 25000, 25000}',
+    '{{"breakfast", "consulting"}, {"meeting", "lunch"}}'); 
+#+end_src
+
+#+begin_src sql
+SELECT unnest(schedule) FROM sal_emp;
+#+end_src
+| unnest       |
+|--------------|
+| meeting      |
+| lunch        |
+| training     |
+| presentation |
+| breakfast    |
+| consulting   |
+| meeting      |
+| lunch        |
+
+
+#+begin_src sql
+SELECT name, unnest(schedule) FROM sal_emp;
+#+end_src
+| name  | unnest       |
+|-------+--------------|
+| Bill  | meeting      |
+| Bill  | lunch        |
+| Bill  | training     |
+| Bill  | presentation |
+| Carol | breakfast    |
+| Carol | consulting   |
+| Carol | meeting      |
+| Carol | lunch        |
+
+
+#+begin_src sql
+SELECT name, foo, bar fselect name, foo, bar
+FROM sal_emp, LATERAl unnest(schedule) WITH ORDINALITY AS t(foo,bar);
+#+end_src
+| name  | foo          | bar  |
+|-------+--------------+------|
+| Bill  | meeting      |    1 |
+| Bill  | lunch        |    2 |
+| Bill  | training     |    3 |
+| Bill  | presentation |    4 |
+| Carol | breakfast    |    1 |
+| Carol | consulting   |    2 |
+| Carol | meeting      |    3 |
+| Carol | lunch        |    4 |
+
+#+begin_src sql
+SELECT name, foo, bar fselect name, foo, bar
+FROM sal_emp, LATERAl unnest(schedule) WITH ORDINALITY AS t(foo,bar);
+#+end_src
+| foo          | bar  |
+|--------------+------|
+| meeting      |    1 |
+| lunch        |    2 |
+| training     |    3 |
+| presentation |    4 |
+| breakfast    |    1 |
+| consulting   |    2 |
+| meeting      |    3 |
+| lunch        |    4 |
+
+
+*** Limitations of GROUP BY
+    
+Generally have to use aggregates for "ungrouped values(fields)"
+
+Note the power of grouping using array_agg:
+
+#+begin_src sql
+SELECT customer_id, array_agg(payment_date)
+FROM payment
+WHERE payment_date BETWEEN '2007-02-07' AND '2007-02-16'
+GROUP BY customer_id;
+#+end_src
+
+and
+
+#+begin_src sql
+SELECT customer_id, array_agg(payment_date)
+FROM payment
+WHERE payment_date BETWEEN '2007-02-07' AND '2007-02-16'
+GROUP BY customer_id
+HAVING array_length(array_agg(payment_date), 1) > 1;
+#+end_src
+
+but can't use an alias to avoid repeating array_agg(payment_date) so
+maybe it's parsed as an independent expression?  Yes, because otherwise
+the column is just called "array_agg" not "array_agg(payment_date)".
+
+*** 7.2.4. GROUPING SETS, CUBE, and ROLLUP
+
+
