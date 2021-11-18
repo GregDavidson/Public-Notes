@@ -1,0 +1,67 @@
+* Notes on Racket Language
+
+** Parameters - Need Parameter Groups, Dependent Parameters
+
+*** Parameters, Threads, etc.
+
+Need clarification on how parameters interact with threads,
+virtual ports, virtual statements, custodians and any other
+features I'm using in the Racket-Shim.
+
+https://docs.racket-lang.org/guide/parameterize.html?q=change%20directory#%28tech._parameter%29
+
+says:
+
+Parameters work properly with threads (see Threads). The
+parameterize form adjusts the value of a parameter only for
+evaluation in the current thread, which avoids race
+conditions with other threads.
+
+Details in https://docs.racket-lang.org/reference/parameters.html
+
+*** Desired Parameter Features
+
+I shouldn't need to provide a new value when I call _ parameterize_
+
+I should be able to enclose the creation of a bunch of
+parameters in a parameter group which I can then use in
+parameterize to save all the parameters in that group and in
+function definitions to allow arguments to that function to
+override those parameters.
+
+I should be able to specify the additional aspects of
+parameters which would allow them to be command-line
+arguments, and then just specify the parameter group to
+command-line.
+
+I should be able to indicate that a parameter is dependent
+on some other parameters and provide a function such that
+when I access it, it will update if required.
+
+This could be built using _make-derived-parameter_ but see
+also [[https://docs.racket-lang.org/reference/chaperones.html#%2528def._%2528%2528lib._racket%252Fprivate%252Fbase..rkt%2529._chaperone-procedure%2529%2529][Impersonators and Chaperones]] and [[https://docs.racket-lang.org/parameter/index.html?q=parameter#%2528part._sets%2529][Parameter Utilities]],
+especially Parameter Sets!
+** Character Encodings, Locales, Ports, Strings, Byte-Strings, I/O
+
+Any byte or string copying, reading or writing function
+should take an optional converter.
+
+Ports should be imbuable with a locale or just with a converter.
+
+I should be able to create an output byte port imbued with
+character-set Latin1 so that any bytes I send there from any
+source are either Latin1 or are translated as I specify,
+including calling a function I specify to do the
+translation - such a function should take the output port
+and the offending character so that it can write what it
+wants or nothing.
+
+It would be nice to have an alternative to get-output-bytes
+which also closes the port.
+
+** Racket Web Server
+
+*** xexpr syntax
+
+It would be nice to allow extra levels of lists to deal with
+fragments and embedding issues.
