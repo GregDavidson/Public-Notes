@@ -43,3 +43,33 @@ To get 30 bits:
 #+BEGIN_SRC shell
 echo $(((RANDOM << 15) + RANDOM))
 #+END_SRC
+
+
+** More Bash feature worth remembering
+
+** Bash Deficiencies
+
+Metaprogramming in Bash is very difficult.
+
+The following doesn't work because =printf(1)= doesn't understand Posix-standard
+=%=/N/=$s= formats.
+#+begin_src bash
+# eval_format printf-format args
+# a substitute for applying a lambda expression
+eval_lambda() {
+    eval $(sprintf "$@")
+}
+# example: eval_format '[[ -f "%1\$s" ]] && [ -O "%1\$s" ]]' path-to-file
+#+end_src
+
+** Possible Bash Improvements
+
+*** Easy conversions between delimited strings and arrays
+    
+*** Shadowing /path/ variables with arrays
+   
+*** Add =lambda= and =apply=
+    
+*** Allow =fork= to reassign I/O assignments
+
+Creating a new terminal session by forking an existing one.
