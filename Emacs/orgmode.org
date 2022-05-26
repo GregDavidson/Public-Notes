@@ -1,9 +1,0 @@
-#+TITLE: _
-#+AUTHOR: _
-#+DATE: _
-#+OPTIONS: toc:nil
-#+OPTIONS: num:nil
-#+OPTIONS: author:nil
-#+OPTIONS: date:nil
-
-* 
