@@ -1,0 +1,45 @@
+* OrgMode Increased Leveraging Notes
+
+Strategies and tactics for increasing my leveraging of =OrgMode= 
+as part of my overall [[file:/home/greg/Notes/Bootstrapping/bootstrapping-notes.org][Bootstrapping Strategies]].
+
+** Org Capture
+
+Review and revisit Org Capture system
+
+** Mobile Org
+
+Get Org working well on my phone
+- Can any of the apps be driven from GitHub??
+
+** Scheduling
+
+Learn agenda-related functionality at least adequately!
+- Bridge OrgAgenda with Google Calendar
+
+** OrgMode Export
+
+*** Problems
+
+Unicode characters, e.g. Lambda, are not exported in all
+export formats
+
+*** Questions
+
+How can I have the =TITLE= come from the /first top-level header/?
+
+How can I auto-hide the settings before the first content section?
+
+How can I control HTML IDs on nodes?
+
+How can I control HTML classes on nodes?
+
+How can I unify export metadata across export formats?
+
+*** Possible Solutions
+
+Study Export Architecture
+
+Write =elisp= to pre-process OrgMode files before export
+
+Write external scripts to pre-process OrgMode files before export
