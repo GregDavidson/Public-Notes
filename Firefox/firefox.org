@@ -1,5 +1,12 @@
 * Firefox Notes
 
+** Style Issues
+
+/Proton/ style is giving too much space around menus.
+- see [[https://github.com/black7375/Firefox-UI-Fix][Firefox-UI-Fix]]
+  - I used their automatic installation method
+  - The extra space is still the same
+  
 ** Multi-Account Containers
 
 Alternatively I could indicate Types with Icons
