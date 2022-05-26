@@ -65,3 +65,21 @@ which also closes the port.
 
 It would be nice to allow extra levels of lists to deal with
 fragments and embedding issues.
+
+** Packages
+
+When DrRacket doesn't find a required package.
+- Shut down DrRacket
+- Make the package and dependencies using =raco=
+- Restart DrRacket
+
+Example:
+#+begin_src racket
+  (require rsound)
+#+end_src
+failed so I shut DrRacket down and ran
+#+begin_src shell
+  raco pkg install rsound
+#+end_src
+which asked for lots of dependencies to be installed.
+Then restarting DrRacket everything worked!
