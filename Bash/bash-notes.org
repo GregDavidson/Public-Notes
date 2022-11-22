@@ -44,32 +44,46 @@ To get 30 bits:
 echo $(((RANDOM << 15) + RANDOM))
 #+END_SRC
 
+** How TO
 
-** More Bash feature worth remembering
+*** Test if Directory is Empty
 
-** Bash Deficiencies
+[[https://unix.stackexchange.com/questions/202243/how-to-check-directory-is-empty][StackExchange: How To Check Directory Is Empty]]
 
-Metaprogramming in Bash is very difficult.
+There are suggestions of how to do it w/o having to =exec= an external program
+like =ls= and they're complicated!
 
-The following doesn't work because =printf(1)= doesn't understand Posix-standard
-=%=/N/=$s= formats.
-#+begin_src bash
-# eval_format printf-format args
-# a substitute for applying a lambda expression
-eval_lambda() {
-    eval $(sprintf "$@")
-}
-# example: eval_format '[[ -f "%1\$s" ]] && [ -O "%1\$s" ]]' path-to-file
+#+begin_src sh
+  ls -A1q ./somedir/ | grep -q .
 #+end_src
 
-** Possible Bash Improvements
+#+begin_src sh
+[ -d "$dir" ] && [ -z $(ls -qAH -- "$dir")" ]
+#+end_src
 
-*** Easy conversions between delimited strings and arrays
-    
-*** Shadowing /path/ variables with arrays
-   
-*** Add =lambda= and =apply=
-    
-*** Allow =fork= to reassign I/O assignments
+** More Bash features worth remembering
 
-Creating a new terminal session by forking an existing one.
+*** Bash Array Expansion
+
+[@] array expansion can create an implicit loop!
+#+begin_src bash
+args=(foo bar)
+printf 'result: %s\n' "${args[@]}"
+#+end_src
+
+#+RESULTS:
+| result: | foo |
+| result: | bar |
+
+How then can we pass multiple array elements as distinct arguments to a
+command???
+
+[@] won't do this
+#+begin_src bash
+  args=(foo bar)
+  printf 'result: %s\n' "${args[*]}"
+#+end_src
+
+#+RESULTS:
+: result: foo bar
+

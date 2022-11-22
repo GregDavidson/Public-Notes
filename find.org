@@ -1,4 +1,16 @@
 * find command tricks
+
+** find -printf awesomeness
+
+Here's how to find the newest N files in a directory hierarchy
+#+begin_src shell
+  find .  -type f -printf "%T@ %p\n" |
+      sort -nr | head -n 10 |
+      while read t f; do
+          ls -l "$f"
+      done
+#+end_src
+
 ** ignoring undesired directories
 
 #+BEGIN_SRC shell

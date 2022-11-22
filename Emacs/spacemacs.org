@@ -2,6 +2,7 @@
 
 | *Evil*          | *Emacs*       | *Description*           |
 | SP aka Spacebar | M-m aka Alt-m | Begin Spacemacs Binding |
+| SP u            | Ctrl-u        | Universal Argument      |
 
 ** Handy Commands to Learn
 
