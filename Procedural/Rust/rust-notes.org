@@ -1,0 +1,14 @@
+* Rust Notes
+
+** Wednesday  5 July 2017
+
+*** Reader::read_line
+	 
++BEGIN_SRC rust
+let mut guess = String::new();
+
+io::stdin().read_line(&mut guess)
+    .expect("Failed to read line");
++END_SRC rust
+
+Why doesn't read_line() just return a new string?

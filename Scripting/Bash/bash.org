@@ -1,0 +1,64 @@
+Notes on Bash
+Tuesday 17 May 2011
+
+# New and interesting things I'm learning today!
+
+let x+=y		# adds numeric value y onto numeric variable x
+x+=y		#appends y onto x
+PATH+=:/usr/games		#appends :/usr/games onto PATH
+# -- what is the rule???
+
+# These are equivalent:
+	[ "$x" ]
+	[ -n "$x" ]
+
+[[ $a == z* ]]   # True if $a starts with an "z" (pattern matching).
+[[ $a == "z*" ]] # True if $a is equal to z* (literal matching).
+
+
+[[ "$a" < "$b" ]]		# is less than, in ASCII alphabetical order
+
+[ "$a" \< "$b" ]		# is less than, in ASCII alphabetical order
+
+&& and || in [[ ]] "short-circuit" while -a and -o inside [ ] do not.
+
+$ [[ 1 == 2 && -n "`echo Kilroy 1>&2`" ]] ; $ echo $?
+1
+$ [[ 1 -eq 2 && -n "`echo Kilroy 1>&2`" ]] ; $ echo $?
+1
+$ [ 1 -eq 2 -a -n "`echo Kilroy 1>&2`" ] ; $ echo $?
+Kilroy
+1
+
+$ x=$(( 2 ** 10 )); echo $x
+1024
+$ ((x+=200)); echo $x						# arithmetic addition
+1224
+
+$ x+=200; echo $x								# string concatenation
+1224200
+
+All of the C bitwise operators work in arithmetic contexts!
+
+$ octal=$((010)); echo $octal
+8
+$ hex=$((0x10)); echo $hex
+16
+$ binary=$((2#10)); echo $binary
+2
+$ let "x = 3#100"; echo $x			# works for bases 2 through 64!
+9
+
+(( t = a<45?7:11 ))   # C-style trinary operator.
+
+C-style for and while loops using (( ... ))) ???
+
+$'...' is a string literal with C-Style Escapes
+
+declare/typeset -g		# creates variables in the global scope
+# -- even when run in a shell function.
+
+set -e # shell exists if a command not in a conditional context fails!
+
+shopt checkjobs	# check & report on running/stopped jobs at exit
+

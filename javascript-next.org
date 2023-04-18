@@ -1,0 +1,74 @@
+* JavaScript Next, Version 6 and beyond
+
+** Use const and let instead of var
+- not hoisted
+- not attached to Window Object
+  - need to use var for that one purpose
+- cannot redefine in same scope, even with var
+  - let allows rebinding with =
+  - const allows object changes, not rebinding
+
+** Arrow Functions, Parameter Defaults, Exponentiation
+- "Arrow Functions" (lambdas)
+  - param => expression
+  - (parameter-list) => expression
+  - (parameter-list) => {statement-list, including returns}
+  - "this" references the object which defined the arrow function!
+- default values for parameters using =
+- exponentiation with **
+  
+** Class Functions
+#+begin_src JavaScript
+class Car {
+  constructor(brand) {
+    this.carname = brand;
+  }
+  get cnam() {
+    return this.carname;
+  }
+  set cnam(x) {
+    this.carname = x;
+  }
+   present() {
+    return "I have a " + this.carname;
+  }
+  static hello() {
+    return "Hello!!";
+  }
+}
+mycar = new Car("Ford");
+document.getElementById("demo").innerHTML = mycar.present();
+alert( Car.hello() );
+#+end_src
+- Can't call static methods on instances at all, only on the class!
+#+begin_src JavaScript
+class Model extends Car {
+  constructor(brand, mod) {
+    super(brand);
+    this.model = mod;
+  }
+  show() {
+    return this.present() + ', it is a ' + this.model;
+  }
+}
+#+end_src
+#+begin_src JavaScript
+class Car {
+  constructor(brand) {
+    this._carname = brand;
+  }
+  get carname() {
+    return this._carname;
+  }
+  set carname(x) {
+    this._carname = x;
+  }
+}
+
+mycar = new Car("Ford");
+mycar.carname = "Volvo"; // calls setter
+document.getElementById("demo").innerHTML = mycar.carname;
+#+end_src
+** New Functions
+- Array.find()
+- Array.findIndex()
