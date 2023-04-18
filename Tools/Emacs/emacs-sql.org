@@ -1,0 +1,85 @@
+* Notes on Emacs with SQL & RDBMSs
+
+** SQL-mode commands
+
+Editing SQL Text
+
+- C-c C-b :: sql-send-buffer
+- C-c C-c :: sql-send-paragraph
+- C-c TAB :: sql-product-interactive
+- C-c C-l :: Prefix Command
+- C-c C-n :: sql-send-line-and-next
+- C-c C-r :: sql-send-region
+- C-c C-s :: sql-send-string
+- C-c C-z :: sql-show-sqli-buffer
+
+- C-c C-l a :: sql-list-all
+- C-c C-l t :: sql-list-table
+
+** SQLi-mode commands
+
+Interacting with an SQL shell, e.g. =psql=
+- Some of these bindings might be shadowed because I'm using Spacemacs with
+  /evil/ bindings.
+
+- C-j :: sql-accumulate-and-indent
+  - (this binding is currently shadowed)
+- RET :: comint-send-input
+;               sql-magic-semicolon
+O               sql-magic-go
+o               sql-magic-go
+- C-<down> :: comint-next-input
+- C-<up> :: comint-previous-input
+- <delete> :: delete-forward-char
+  - (this binding is currently shadowed)
+<insert-state>  Prefix Command
+- <kp-delete> :: delete-forward-char
+- <mouse-2> :: comint-insert-input
+  - (this binding is currently shadowed)
+<normal-state>  Prefix Command
+
+- C-c C-l :: Prefix Command
+- C-c C-w :: sql-copy-column
+  - (this binding is currently shadowed)
+
+- <normal-state> C-j :: comint-next-input
+- <normal-state> C-k :: comint-previous-input
+
+- <insert-state> C-j :: comint-next-input
+- <insert-state> C-k :: comint-previous-input
+- <insert-state> <down> :: comint-next-input
+- <insert-state> <up> :: comint-previous-input
+
+- C-c C-a :: comint-bol-or-process-mark
+- C-c C-c :: comint-interrupt-subjob
+- C-c C-d :: comint-send-eof
+- C-c C-e :: comint-show-maximum-output
+- C-c C-l :: comint-dynamic-list-input-ring
+  - (this binding is currently shadowed)
+- C-c RET :: comint-copy-old-input
+- C-c C-n :: comint-next-prompt
+- C-c C-o :: comint-delete-output
+- C-c C-p :: comint-previous-prompt
+- C-c C-r :: comint-show-output
+- C-c C-s :: comint-write-output
+- C-c C-u :: comint-kill-input
+- C-c C-w :: backward-kill-word
+  - (this binding is currently shadowed)
+- C-c C-x :: comint-get-next-from-history
+- C-c C-z :: comint-stop-subjob
+- C-c ESC :: Prefix Command
+- C-c C-\ :: comint-quit-subjob
+- C-c SPC :: comint-accumulate
+- C-c . :: comint-insert-previous-argument
+
+- C-M-l :: comint-show-output
+- M-n :: comint-next-input
+- M-p :: comint-previous-input
+- M-r :: comint-history-isearch-backward-regexp
+
+- C-c C-l a :: sql-list-all
+- C-c C-l t :: sql-list-table
+
+- C-c M-o :: comint-clear-buffer
+- C-c M-r :: comint-previous-matching-input-from-input
+- C-c M-s :: comint-next-matching-input-from-input

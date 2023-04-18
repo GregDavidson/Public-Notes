@@ -1,0 +1,26 @@
+** Termux Notes
+
+* ip command is gone
+[2023-02-27]
+
+- My go-sshd script calls ip but that command seems to be gone
+- I used ifconfig manually instead
+- I tried to install ip and it wasn't found
+
+* copying a tree with tar and sshd had issues
+[2023-02-27]
+
+I did
+#+begin_src sh
+tar cf - .emacs.d .spacemacs | ssh -ax -p 8022 10.106.219.137 tar xvf -
+#+end_src
+
+The .x was required to avoid the error
+#+begin_example
+X11 forwarding request failed on channel 0
+#+end_example
+
+The ~-a~ was likely not needed.
+
+I had some confusion with the link
+- .emacs.d/private/JGD

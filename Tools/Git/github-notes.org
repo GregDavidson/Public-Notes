@@ -1,0 +1,5 @@
+* GitHub Notes
+
+To see all new issues in any of my repositories, put this in the upper-left search area:
+
+is:open user:GregDavidson
