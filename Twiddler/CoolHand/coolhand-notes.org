@@ -1,0 +1,28 @@
+* Twidder Notes
+
+** New Default Mode
+
+Start with CoolHand, get left/right intuitive
+
+Add trailing spaces to ,;:!?&|)]}
+
+Create a binding for .<space>
+
+Alternatively, have Shift version of these keys produce <space>key<space>
+
+** New Numeric Mode
+
+Use middle column for binary encoding of numbers with 10 -> 0
+
+Use another column for F1 through F12
+
+Use the rest for the other non-control non-graphic function keys
+
+** Improved Shift Mode
+
+Use shift of non-letter characters to produce something useful!
+
+** Control-, Shift-, Alt-, etc. prefix keys?
+
+If Twiddler can't do it, do it in Emacs, as that's the only
+program that will want them, anyway!
