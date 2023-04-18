@@ -1,0 +1,15 @@
+* Mate Desktop Notes
+
+** Mate Desktop Icons Have Disappeared
+
+and Mouse-3 does nothing on the desktop background
+
+This fixed it:
+#+begin_src sh
+gsettings set org.mate.background show-desktop-icons true
+#+end_src
+
+This was suggested but wasn't necessary:
+#+begin_src sh
+killall caja
+#+end_src
