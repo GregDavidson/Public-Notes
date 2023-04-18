@@ -1,0 +1,97 @@
+MOVE:	back	forw	begin	end
+
+file			M-<	M->
+screen		M-v	C-v
+char	C-b	C-f
+word	M-b	M-f
+line	C-p	C-n	C-a	C-e
+sent			M-a	M-e
+
+DELETE:	back	forw	begin	end	current
+
+char	DEL	C-d
+word	M-DEL	M-d
+line				C-k
+sent			S-DEL	M-k
+region					C-w
+
+REGIONS:
+
+set	C-@	dot<->mark	SC-x
+copy	M-w	indent	C-\	fill	M-g
+filter	M-\	eval-region
+pop	C-u C-@@
+
+COMING & GOING
+
+stop	SC-z		quit	SC-c
+
+DISPLAY CONTROL
+        C-l     Clear and redisplay
+
+UNDOING, REPEATING
+
+undo	S-u	enter argument	C-u
+yank	C-y	Cycle yank	M-y
+
+TRANSPOSE
+
+char	C-t	word	M-t	s-exp	CM-t	line	M--
+
+FILES
+
+edit	SC-f	study	SC-r	retry	SC-v
+save	SC-s	write	SC-w
+write-region
+
+BUFFERS					SEARCHING
+
+list	C-b	kill	S-k	kill-some-buffers	buffer-menu
+
+LISP					TEXT
+
+call	M-x				fill-pp	M-q
+    
+DOCUMENTATION: C-h
+
+m(ode)	c(har seq)  a(propos) k(ey docn) f(unction) v(ariable)
+
+MISC
+
+overwrite-mode	toggle	quote	C-q
+
+PREFIX KEYS:	C-x C-h X-4 ESC C-c
+
+NOTES
+
+When indicating point, cursor glyph should change to point between characters.
+	When the cursor is elsewhere, point should be left in place.
+Help windows should be removable without removing their window; whenever a new
+	buffer has replaced an old one in an existing window, it should stack
+	on top, and be unstackable, or movable to a new or other window.
+
+Special glyphs should be used for vertical separation of side-by-side windows.
+
+BUGS
+
+Horizontal division loses the inverse video marking of the mode lines.
+
+The 80th character on a line is overwritten by $, although it fits.  Inverse
+video would be a better way to mark such states anyway, or other special mode.
+
+Keymaps should be attachable to windows, as well as to buffers and the global
+	environment.
+Many commands have complex behavior in order to maximize their usefulness, but
+	should not, then, be used from programs.  Examples include:
+	C-k, SC-o
+Need to be able to push dot, so as to make, e.g., delete-object equivalent to
+	push-mark-obj, delete-to-mark-pop.  Need to be able to bind keys to
+	function sequences like that.
+I don't believe that it would be intolerably slow to compute & maintain the
+	row & column numbers, since once determined, its easy to update them.
+Why not represent a rectangle as a hunk of text with line boundaries given by
+	eoln codes as usual?  Then they could go on the regular kill ring, etc.
+	and all rectangle commands would be more generally useful.
+What is this garbage about only 8000 ``or so'' characters of delted of modified
+	text being saved?  This violates the GNU philosophy.  Write deltas to
+	files!

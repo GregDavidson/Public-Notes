@@ -1,0 +1,317 @@
+* Notes on Git and Git Workflows
+
+** Git References
+
+- [[https://git-scm.com][Pro Git Website]]
+- [[https://git-scm.com/book/en/v2][Pro Git Book 2nd Edition]]
+- [[http://gitready.com][git ready]]
+
+
+** Questions
+
+What are grafts and replacement refs as mentioned in
+[[https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-filter-branch.html][git filter-branch]] and the .git/info/grafts file and the
+refs/replace/ namespace?  And what are namespaces?  Sheesh!
+
+** Setting up a project repository
+
+mkdir PROJECT-DIRECTORY 
+cd PROJECT-DIRECTORY 
+git init
+
+** Put in key files
+
+Create or Copy & Customize
+	 
+- .git/description
+- .gitignore
+- LICENSE.md
+- README.md
+
+** Adding and committing
+
+#+BEGIN_SRC sh
+git status
+git add . # or add individual files
+git status
+git commit -m "first commit - or whatever"
+#+END_SRC
+
+** Mirroring it with GitHub
+
+#+BEGIN_SRC sh
+git remote add origin https://github.com/GregDavidson/wicci-core-S1_refs.git
+git push -u origin master
+#+END_SRC
+
+** Setting up a private server
+
+On the remote system:
+
+#+BEGIN_SRC sh
+mkdir PROJECT-DIRECTORY 
+cd PROJECT-DIRECTORY 
+git init --bare
+#+END_SRC
+
+On any client system:
+
+Create the git project directory as usual
+
+#+BEGIN_SRC sh
+git remote add origin [user@]remote-server:PATH/PROJECT-DIRECTORY
+git push origin master
+#+END_SRC
+
+Or if already created and pushed, clone it:
+#+BEGIN_SRC sh
+git clone ssh://remote-server/PROJECT-DIRECTORY
+#+END_SRC
+
+To change remote origin
+#+BEGIN_SRC sh
+git remote rm origin
+#+END_SRC
+
+** Merging Files
+
+# 1st commit my local changes
+
+You can bring in all work done in a remote repository with
+#+BEGIN_SRC sh
+git fetch <remote-name-or-url>
+#+END_SRC
+and then merge any changes into your own branches.
+
+When the remote repository is being tracked (as origin is by default after clone) then
+#+BEGIN_SRC sh
+git pull origin master					# or whatever remote-name branch-name
+#+END_SRC
+will fetch and merge from the remote into the specified local branch.
+
+** Merging Repositories
+
+Lots of ways to do it.  I followed the approach at
+
+[[https://saintgimp.org/2013/01/22/merging-two-git-repositories-into-one-repository-without-losing-file-history/][merging-two-git-repositories-into-one-repository-without-losing-file-history]]
+
+** Helpful GUIs
+
+- giggle
+- Emacs Magit
+
+** Removing a file from the repository
+
+The key command is
+
+[[https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-filter-branch.html][git filter-branch]]
+
+#+BEGIN_EXAMPLE
+git filter-branch [--setup <command>] [--subdirectory-filter <directory>]
+        [--env-filter <command>] [--tree-filter <command>]
+        [--index-filter <command>] [--parent-filter <command>]
+        [--msg-filter <command>] [--commit-filter <command>]
+        [--tag-name-filter <command>] [--prune-empty]
+        [--original <namespace>] [-d <directory>] [-f | --force]
+        [--state-branch <branch>] [--] [<rev-list options>…]
+#+END_EXAMPLE
+
+and there are some complications and subtleties
+
+*** Git Forget Blog function
+
+[[https://ownyourbits.com/2017/01/18/completely-remove-a-file-from-a-git-repository-with-git-forget-blob/][Completely remove a file from a git repository with git forget-blob]]
+
+Usage
+
+git forget-blob file_to_forget
+
+#+BEGIN_SRC sh
+wget https://raw.githubusercontent.com/nachoparker/git-forget-blob/master/git-forget-blob.sh -O ~/SW/git/bin/git-forget-blob
+chmod +x !$
+#+END_SRC
+
+#+BEGIN_SRC bash
+#!/usr/bin/env bash
+# Completely remove a file from a git repository history
+#
+# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
+# GPL licensed (see end of file) * Use at your own risk!
+#
+# Usage:
+#   git-forget-blob file_to_forget
+#
+# Notes:
+#   It rewrites history, therefore will change commit references and delete tags
+function git-forget-blob()
+{
+  test -d .git || { echo "Need to be at base of a git repository" && return 1; }
+  git repack -Aq
+  ls .git/objects/pack/*.idx &>/dev/null || {
+    echo "there is nothing to be forgotten in this repo" && return; 
+  }
+  local BLOBS=( $( git verify-pack -v .git/objects/pack/*.idx | grep blob | awk '{ print $1 }' ) )
+  for ref in ${BLOBS[@]}; do
+    local FILE="$( git rev-list --objects --all | grep $ref | awk '{ print $2 }' )"
+    [[ "$FILE" == "$1" ]] && break
+    unset FILE
+  done
+  [[ "$FILE" == "" ]] && { echo "$1 not found in repo history" && return; }
+ 
+  git tag | xargs git tag -d
+  git branch -a | grep "remotes\/" | awk '{ print $1 }' | cut -f2 -d/ | while read r; do git remote rm $r 2>/dev/null; done
+  git filter-branch --index-filter "git rm --cached --ignore-unmatch $FILE"
+  rm -rf .git/refs/original/ .git/refs/remotes/ .git/*_HEAD .git/logs/
+  (git for-each-ref --format="%(refname)" refs/original/ || echo :) | \
+    xargs -n1 git update-ref -d
+  git reflog expire --expire-unreachable=now --all
+  git repack -q -A -d
+  git gc --aggressive --prune=now
+}
+#+END_SRC
+git-forget-blob $@
+
+In a nutshell, this
+
+    uses git filter-branch  to apply git rm  to each single commit
+    then, it removes all possible references including remotes, tags and reflog
+    next, it deletes unreferenced packs, and
+    finally, it forces aggresive garbage collection with git gc --prune .
+
+Things to keep in mind:
+
+    This rewrites history, so  forced pushes,  merges, conflicts and such niceties will happen.
+    For the same reasons, tags will be lost and commit hashes will change.
+
+EDIT: you can use git forget-blob inside git rebasetags so that you don’t lose your tags.
+
+Remember to keep a checked out copy of the repo before trying this, and use with care.
+*** [[https://stackoverflow.com/questions/5563564/completely-remove-files-from-git-repo-and-remote-on-github][Ignoring doesn't remove a file]]
+
+[[http://gitready.com/beginner/2009/03/06/ignoring-doesnt-remove-a-file.html][ignoring doesn't remove a file]]
+
+#+BEGIN_SRC sh
+git filter-branch --index-filter \
+'git rm -r --cached --ignore-unmatch <file/dir>' HEAD
+#+END_SRC
+
+Also, to remove all the deleted files from caches git creates, use:
+
+#+BEGIN_SRC  sh
+rm -rf .git/refs/original/ &&
+	git reflog expire --all &&
+	git gc --aggressive --prune
+#+END_SRC
+
+*** [[https://dalibornasevic.com/posts/2-permanently-remove-files-and-folders-from-a-git-repository][Permanently remove files and folders from Git repo]]
+
+
+you can permanently remove a folder from a git repository with:
+#+BEGIN_SRC sh
+git filter-branch --tree-filter 'rm -rf vendor/gems' HEAD
+#+END_SRC
+Which will go through the whole commits history in the
+repository, one by one change the commit objects and rewrite
+the entire tree.
+
+We use
+-  -r (recursive) parameter for recursive remove
+- -f (force) to ignore nonexistent files (since folder/files
+  may not be introduced to the repository within the commits
+  range on which we do branch filter).
+
+You can also specify range between commits, where you like to filter:
+
+#+BEGIN_SRC sh
+git filter-branch --tree-filter 'rm -rf vendor/gems' 7b3072c..HEAD
+#+END_SRC
+
+First commit is not being filtered.
+
+If you subsequently try to do branch filters, you should
+provide -f option to filter-branch to overwrite the backup
+in refs/original/ where git stores the original refs from
+the previous branch filter.
+
+#+BEGIN_SRC sh
+git filter-branch -f --tree-filter 'rm -rf vendor/gems' HEAD
+#+END_SRC
+
+You can also remove original refs by hand, or do some backup to other location.
+
+#+BEGIN_SRC sh
+rm -rf .git/refs/original/
+#+END_SRC
+
+Permanently removing files from repository is same as folders:
+
+#+BEGIN_SRC sh
+git filter-branch --tree-filter 'rm filename' HEAD
+#+END_SRC
+
+There are few branch filter types (you can check the documentation), but the one we use here --tree-filter is for rewriting the tree and its contents. You can also use --index-filter which is similar to --tree-filter but does not check the tree, and it goes much faster.
+
+#+BEGIN_SRC sh
+git filter-branch --index-filter 'git rm --cached --ignore-unmatch filename' HEAD
+#+END_SRC
+
+--ignore-unmatch parameter is used to ignore nonexistent files.
+
+To remove the file from all branches that might have it in their history tree:
+
+#+BEGIN_SRC sh
+git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch filename' --prune-empty --tag-name-filter cat -- --all
+#+END_SRC
+
+--prune-empty parameter is used to remove empty commits.
+
+At the end, don't forget to push the changes to the repository with --force, since this is not a fast forward commit, and the whole history within the commits range we filtered will be rewritten.
+
+#+BEGIN_SRC sh
+git push origin master --force
+#+END_SRC
+
+Update: While filter-branch rewrites the history for you,
+the objects remain in your local repository until they get
+dereferenced and garbage collected.
+
+To check what's pointing to nuked objects with use the
+following command. If you have tags and branches in the repo
+pointing to those objects, you'll most likely see them.
+
+#+BEGIN_SRC sh
+git for-each-ref --format='delete %(refname)' refs/original
+#+END_SRC
+
+To dereference, expire reflog (which by default is 90 days)
+and force garbage collect, you can do:
+
+#+BEGIN_SRC sh
+git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin
+git reflog expire --expire=now --all
+git gc --prune=now
+#+END_SRC
+
+You'll need to make sure all branches and tags are pushed to
+remote (unless you're pushing to a new repo).
+
+#+BEGIN_SRC sh
+git push origin --force --all
+git push origin --force --tags
+#+END_SRC
+
+** Aliases
+
+Here's a couple of good ones:
+
+#+BEGIN_SRC sh
+git config --global alias.unstage 'reset HEAD --'
+git config --global alias.last 'log -1 HEAD'
+#+END_SRC
+
+** Moving a file to a new repository WITH HISTORY
+
+#+BEGIN_SRC sh
+cd EXISTING REPOSITORY
+git log --pretty=email --patch-with-stat --reverse -- path/to/file_or_folder | (cd /path/to/new_repository && git am --committer-date-is-author-date)
+#+END_SRC

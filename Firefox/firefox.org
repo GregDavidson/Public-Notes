@@ -1,0 +1,30 @@
+* Firefox Notes
+
+** Style Issues
+
+/Proton/ style is giving too much space around menus.
+- see [[https://github.com/black7375/Firefox-UI-Fix][Firefox-UI-Fix]]
+  - I used their automatic installation method
+  - The extra space is still the same
+  
+** Multi-Account Containers
+
+Alternatively I could indicate Types with Icons
+
+Firefox Container Type Code Prefixes
+
+- I Identity
+- W Web or Internet Service
+- S [shopping cart] Shopping Site
+- F [$] Financial Institution
+- O Non-Commercial Organizations
+  - I'm including Landmark
+- N News Sites, especiall For Profit
+- R [Glasses] Reference Information Sites
+  - Including Wikipedia
+  - Including Technical Information
+- G Government
+- U Utilities
+- M [Apple] Medical
+- T Semi-Temporary
+  - Should flush periodically!

@@ -1,0 +1,221 @@
+* GNU Emacs Notes
+
+** Commands to Remember
+** Renaming file & buffer
+
+- https://stackoverflow.com/questions/384284/how-do-i-rename-an-open-file-in-emacs
+
+*** vc-rename-file
+
+Annoyances:
+- have to enter existing filename (no default to current file)
+- exiting name not given as template for new name
+
+Does it handle directories?
+
+*** Using Dired
+
+- Prerequisite: load-library dired-x
+  - to bind C-x C-j
+  - or use dired-jump directly which autoloads dired-x
+  - sounds like C-x C-j should be set to do that!
+
+| C-x C-j | dired jump      | get name of current file in Dired |
+| R       | dired-do-rename | rename the file                   |
+| C-x k   |                 | back to renamed buffer            |
+
+- or C-X b
+- or maybe even q
+
+*** Tramp
+You can also edit local files as root with either of the following (note the double colon, which is required)
+- C-x C-f /su::/etc/hosts -- didn't work
+- C-x C-f /sudo::/etc/hosts -- didn't work
+- C-x C-f /sudo:root@localhost:/etc/hosts -- worked!
+** Elisp
+; usually not needed, but can do no harm:
+#+BEGIN_SRC
+(set (make-local-variable 'foo) "value")
+#+END_SRC
+** Debugging ELisp
+https://www.emacswiki.org/emacs/CategoryDebug
+
+When something doesn't work:
+- M-x set-variable RET debug-on-error RET t
+
+- Debug with edebug Source Level Debugger
+Two debuggers
+
+
+*** Window Management: http://www.emacswiki.org/emacs/CategoryWindows
+
+- C-X + = balance-windows
+-- Make windows same height/width in window split subtrees
+
+- delete-other-windows-vertically
+
+**** https://www.gnu.org/software/emacs/manual/html_node/elisp/Windows-and-Frames.html
+Visible (Live) Emacs Windows are the leaves of the Window
+Tree.  The "internal nodes" of a Window Tree can be used for
+organizing the relationships among Live Windows!
+
+The minibuffer window is NOT part of its Frame's Window Tree.
+**** https://www.gnu.org/software/emacs/manual/html_node/elisp/Preserving-Window-Sizes.html
+- Buffer-local variable: window-size-fixed
+-- Values: nil, 'height, 'width, 'any-non-nil-value=both
+-- Aggressively inhibits resizing of windows on that buffer
+- Function: window-resizable
+-- Can this window be resized
+- Function: window-preserve-size &optional window horizontal preserve
+-- Less aggressively preserves window height/width
+-- May be lifted by various resize functions
+- Window Parameter preserved-size
+-- Installed by window-preserve-size
+- Function: window-preserved-size &optional window horizontal
+-- Returns preserved height/width of window or nil
+***** Pinning Window Size
+
+Variables and functions in file window.el
+		 
+- window-size-fixed :: local variable, nil, t, 'height, 'width
+- window-preserve-size :: non-interactive function, 
+- shrink-window-if-larger-than-buffer :: adjusts window height
+- fit-window-to-buffer :: supposed to adjust height and width
+**** https://www.gnu.org/software/emacs/manual/html_node/elisp/Recombining-Windows.html
+Growing windows vertically steals from below if possible.
+
+Shrinking windows vertically or deleting them donates space
+to the window above, if such exists!
+
+- User Option: window-combination-limit
+Controls whether an internal window will be created as the
+parent when a window is split.
+**** https://www.gnu.org/software/emacs/manual/html_node/elisp/Dedicated-Windows.html
+Dedicated windows are not used when a command is selecting a
+window to display some new content.
+- Function: window-dedicated-p &optional window
+- Function: set-window-dedicated-p window flag
+**** http://www.emacswiki.org/emacs/WindowsAndRegisters
+    C-x r w REGISTER – store current configuration in given register
+    C-x r j REGISTER – restores configuration from given register
+e.g. arrange my favorite 6-window frame, then: C-x r w 6
+later I restore it with: C-X r j 6
+
+**** http://www.emacswiki.org/emacs/WinnerMode
+Winner Mode is a global minor mode.
+Activate with: ‘M-x winner-mode RET’ or add to ~/.emacs:
+    (when (fboundp 'winner-mode) (winner-mode 1))
+Now:
+C-c left = undo change(s) in window configuration
+C-c right = redo change(s) in window configuration
+**** Selecting Windows
+***** https://www.emacswiki.org/emacs/WindMove
+- (windmove-default-keybindings)
+-- default bindings: SHIFT + up/down/left/right
+-- conflict with org-mode shift-selection
+-- user-error: To use shift-selection with Org mode, customize ‘org-support-shift-select’
+-- Solution: (windmove-default-keybindings 'meta)
+j-- Also doesn't seem to work with tty Emacs
+*** Packages
+To re-compile all packages after a major version change:
+- M-:
+- or in *scratch*
+#+BEGIN_SRC emacs-lisp
+(dolist (d (cons package-user-dir package-directory-list))
+  (byte-recompile-directory d nil 'force) )
+#+END_SRC
+- After restarting Emacs, packages should work fine
+again.
+*** Managing Fonts
+
+**** variable-pitch-mode, text-scale-mode, face-remap.el
+
+text-scale-adjust is bound to C-x C-0, C-x C-=, C-x C--, C-x C-+
+
+After which further +,=,-,0 characters further adjust the text:
+
+-   +, =   Increase the default face height by one step
+-   -      Decrease the default face height by one step
+-   0      Reset the default face height to the global default
+
+**** Controlling Faces Automatically
+
+[[https://yoo2080.wordpress.com/2013/05/30/monospace-font-in-tables-and-source-code-blocks-in-org-mode-proportional-font-in-other-parts/
+
+(set-face-attribute]] 'org-table nil :inherit 'fixed-pitch)
+
+You may use C-u C-x = to see which face is in effect at a particular point.
+
+*** Controlling Modes
+
+; -*- mode: Lisp; eval: (auto-fill-mode 1); -*-
+
+All minor modes have a variable which can be used as above!
+
+** OrgMode
+
+*** Handy Commands
+
+- C-c C-l :: to edit link url
+
+*** OrgMode Reference
+	 
+[[http://orgmode.org/]]
+
+[[http://orgmode.org/worg/]]
+
+[[http://orgmode.org/org.html]]
+
+[[http://doc.norang.ca/org-mode.html]]
+
+[[http://www.axion5.net/post/markup-cheat-sheet-for-org-mode.html]]
+
+*** OrgMode HTML Export
+
+[[http://orgmode.org/manual/CSS-support.html]]
+
+[[https://emacs.stackexchange.com/questions/7323/how-to-add-new-markup-to-org-mode-html-export]]
+
+[[http://gongzhitaao.org/orgcss/]] an alternative CSS
+
+** Emacs eww
+
+- Customize Option: Browse Url Browser Function :: www-browse-url
+
+Unfortunately, this only opens it in the current window, even if there's an eww window already in the frame.
+
+** Emacs Ideas
+
+C-X 1 should only get rid of the other windows in the current split,
+i.e. whatever window this window was split off from.  Repeated use
+would eventually wind us up with only one.  And there should be an
+easy function to undo it, which itself is repeatable!
+
+Need a very easy way to repeat the last command - S-Space?
+
+Lots of commands which would usually affect a natural unit, e.g.
+line/word/char should affect the region if it exists.
+
+** Emacs Low Hanging Fruit
+
+** shell
+
+(shell) should merge with (terminal) by going into terminal
+mode as soon as a screen-mode command is issued and then
+going back to regular shell mode as soon as the application
+indicates leaving screen-mode.
+
+There needs to be a way to tell, ideally via a shell
+variable, that we're inside of emacs so that smart shell
+functions can take advantage of it, e.g. setting appropriate
+prompts.  Note that some standard way of conveying that
+certain standard info, e.g. host and path are in a "status
+line" would be nice so that we know not to bother to put
+them into the prompt.
+
+** flowed text
+
+A property of various modes should allow for smart
+auto-fitting text to fit window width, i.e. for HTML text
+just doing a word fill, for programming languages doing
+smart breaking-up of lines, etc.

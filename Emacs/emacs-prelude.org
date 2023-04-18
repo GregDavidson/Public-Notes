@@ -1,0 +1,6 @@
+* Batsov's Emacs Prelude
+
+  ** Racket
+
+  On Tails, Emacs is failing to run the Racket REPL.  I'm suspecting it's using LSV or some such, and it's not configured properly.
+

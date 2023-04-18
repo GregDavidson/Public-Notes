@@ -1,0 +1,227 @@
+mh-add-msg-to-seq
+  Function: Add a message MSG-NUM to a sequence SEQ.
+mh-annotate
+  Function: Mark the current message with the character NOTE and annotate the message
+mh-answer
+  Function: Answer a letter.
+mh-apply-to-message-list
+  Function: Apply function FUNC to each item in a message-list LIST,
+mh-apply-to-seq
+  Function: For each message in sequence SEQ, evaluate the FUNCTION with ARGS.
+mh-auto-fill-letters
+  Variable: Invoke auto-fill-mode in letters
+mh-clean-message-header
+  Function: Flush extraneous lines in a message header.  The variable
+  Variable: Remove invisible header lines in messages
+mh-close-folder
+  Function: Process the outstanding delete and move commands in the current folder.
+mh-cmd-note
+  Variable: Offset to insert notation
+mh-command-loop
+  Function: read and execute mh commands.
+mh-compose-and-send-mail
+  Function: Edit a draft message and send or save it.  SEND-ARGS is passed to the
+mh-copy-msg
+  Function: Copy specified message(s) to another folder without deleting them.
+mh-current-folder
+  Variable: Currently active folder
+mh-delete-list
+mh-delete-msg
+mh-delete-msg
+  Function: Marks the specified message(s) for later deletion.
+mh-dot-in-header
+  Function: t iff cursor in message header.
+mh-exec-cmd
+  Function: Execute MH command COMMAND with ARGS.  Any output is shown to the user.
+mh-exec-cmd-no-wait
+  Function: Execute MH command COMMAND with ARGS and do not wait until it finishes.
+mh-exec-cmd-output
+  Function: Execute MH command COMMAND with ARGS putting the output into the current
+mh-exit
+  Function: Exit mh-e and process outstanding delete and move commands.
+mh-find-path
+  Function: Set mh_path from  ~/.mh_profile.
+mh-folder-buffer
+  Variable: Buffer name of currently active folder
+mh-folder-filename
+mh-folder-mode
+  Function:     n: next message                 p: previous message
+mh-folder-mode-hook
+  Variable: Invoked in mh-folder-mode
+mh-forward
+  Function: Forward a letter.
+mh-get-cur-msg
+  Function: Returns the cur message from FOLDER.
+mh-get-field
+  Function: Get the value of field FIELD in the current buffer.
+mh-get-folder-name
+  Function: Get the value of field FIELD in the current buffer.
+mh-get-folder-name
+  Function: Prompt for a folder name with PROMPT.  DEFAULT is the default folder.
+mh-get-msg-num
+  Function: Returns the message number of the current message.  If the flag
+mh-get-new-mail
+  Function: Read new mail into the current buffer.
+mh-get-response
+  Function: Prints PROMPT, reads a character, and checks it against the list
+mh-goto
+  Function: Position the cursor at a particular message.
+mh-header-line-position
+  Function: Position cursor at end of field name when in header.
+mh-header-next
+  Function: Modified ^N command that skips to end of header field names.
+mh-header-previous
+  Function: Modified ^P command that skips to end of header field names.
+mh-inc-folder
+  Function: inc(orporate) new mail in the current folder.
+mh-indicate-seq
+  Function: Add the specified message(s) to a sequence.
+mh-insert-fields
+  Function: Insert the NAME-VALUE pairs in the current buffer.
+mh-insert-letter
+  Function: Insert a message in the current letter.
+mh-invisible-headers
+  Variable: Regexp specifying headers that are not to be shown.
+mh-keymap
+mh-kill-folder
+mh-keymap
+mh-kill-folder
+  Function: Removes the current folder.
+mh-last-destination
+  Variable: Destination of last
+mh-last-folder
+  Variable: Last folder read by mh-rmail
+mh-letter-mode
+  Function: Mode for composing letters in mh.
+mh-letter-mode-hook
+  Variable: Invoked in mh-letter-mode
+mh-letter-to-seq
+  Function: Given a LETTER, return a string that is a valid sequence name.
+mh-lib
+  Variable: Directory of MH library
+mh-list-folders
+  Function: List mail folders.
+mh-list-to-string
+  Function: Flattens the list L and makes every element a string.
+mh-lpr-command-format
+  Variable: Format for Unix command line to print a message. The format should be
+mh-make-folder
+  Function: Create and initialize a new mail folder called NAME and make
+mh-make-mode-line
+  Function: Returns a string for mode-line-format.
+mh-make-pick-args
+  Function: Prompt the user for a pattern to look for in messages and return a string
+mh-make-pick-pattern
+mh-move
+mh-make-pick-pattern
+mh-move
+  Function: Move specified message(s) to another folder.
+mh-move-list
+mh-msg-filename
+  Function: Returns a string containing the pathname for a message.
+mh-msg-filenames
+  Function: Returns a string for ls specifying the messages MSGS in folder FOLDER.
+mh-new-seq
+  Function: Return a new sequence name.
+mh-next-line
+  Function: Move to next undeleted message in window and display body if summary
+mh-next-seq-num
+mh-notate
+  Function: Marks the current message with the character NOTATION at position OFFSET.
+mh-notate-seq
+  Function: Mark all messages in the sequence SEQ with the NOTATION at character
+mh-pack-folder
+  Function: Closes and packs the current folder.
+mh-page-digest
+  Function: Advance displayed message to next digested message.
+mh-pattern
+mh-pick-body
+  Function: Return the pick string for the message body.
+mh-pick-header
+  Function: Return the pick string for the header fields.
+mh-pick-template
+mh-position-to-current
+  Function: Position the cursor at the current message.
+mh-position-to-current
+  Function: Position the cursor at the current message.
+mh-previous-line
+  Function: Move to previous message in window and display body if summary flag set.
+mh-previous-page
+  Function: Page the displayed message backwards.
+mh-print-msg
+  Function: Print specified message(s) on a line printer.
+mh-process-commands
+  Function: Process outstanding commands for the buffer BUFFER.
+mh-process-seq-commands
+  Function: Process outstanding sequence commands for the sequences in SEQ-LIST.
+mh-progs
+  Variable: Directory containing MH commands
+mh-quit
+  Function: Quit mh-e without processing outstanding delete and move commands.
+mh-re-move
+  Function: Move specified message to same folder as last move.
+mh-read-file
+  Function: Read file FILE-NAME into buffer BUFFER-NAME.  No errors if disk file
+mh-read-seq
+  Function: Prompt the user with PROMPT and read a sequence name.
+mh-redisplay
+  Function: Redisplay the message summary and the current message.
+mh-redistribute
+  Function: Redistribute a letter.
+mh-refile
+  Function: refile the msgs in the folder called destination.
+mh-regenerate-headers
+  Function: refile the msgs in the folder called destination.
+mh-regenerate-headers
+  Function: Replace buffer with scan of its contents over range RANGE.
+mh-remove-msg-from-seq
+  Function: Remove a message MSG-NUM from the sequence SEQ.
+mh-remove-seq
+  Function: Delete the sequence SEQ.
+mh-renumber-folder
+  Function: Renumber messages in folder to be 1..N.
+mh-rescan-folder
+  Function: Optionally process commands in current folder and (re)scan it.
+mh-rmail
+  Function: inc(orporate) new mail if optional ARG omitted, or scan a MH mail box
+mh-scan-folder
+  Function: Scan the folder FOLDER over the range RANGE.
+mh-search-folder
+  Function: Search for letters containing pattern.
+mh-send
+  Function: Compose and send a letter.
+mh-send-letter
+  Function: Prompt the user as to the disposition of the just-composed letter.
+mh-seq-from-command
+  Function: Make a sequence called SEQ by executing the form COMMAND.
+mh-seq-list
+mh-seq-msgs
+mh-seq-name
+mh-seq-to-msgs
+  Function: Returns the list of messages in sequence SEQ.
+mh-seq-to-notation
+  Function: Returns the list of messages in sequence SEQ.
+mh-seq-to-notation
+  Function: Return the string used to indicate sequence SEQ in a scan listing.
+mh-show
+  Function: Show currently indicated message.
+mh-show-buffer
+  Variable: Name of buffer that displays messages
+mh-shown-msgs
+mh-smail
+  Function: Send mail using the MH mail system.
+mh-summarize
+mh-summary
+  Function: Show a summary of mh-e commands.
+mh-summary-height
+  Variable: Number of lines in summary window
+mh-toggle-summarize
+  Function: turn the summary mode of displaying messages on or off.
+mh-undo
+  Function: undo the deletion or move of the specified message(s).
+mh-unmark-all-headers
+  Function: This function removes all + flags from the headers, and if called
+mh-user-path
+  Variable: User's mail folder
+mh-visit-folder
+  Function: visit a new folder.

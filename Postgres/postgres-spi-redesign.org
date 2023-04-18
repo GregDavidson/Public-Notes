@@ -1,0 +1,287 @@
+* A Relational Store as an RDBMS Programming API
+
+Goals:
+- Safety
+- Efficiency
+- Convenience
+
+Possible names:
+- SROS -- Simple Relational Entity Store
+
+** OVerview
+
+We wish to have an API for interacting with an RDBMS with as
+little impedance (overhead and clumsiness) as possible, in
+fact with less impedance than the usual RDBMS API.  For
+efficiency, it needs to be able to cache results obtained
+from the RDBMS and hold results being prepared for the
+RDBMS.  We believe that the design of such a cache should
+reflect the entities and organizational semantics of the
+RDBMS but simplified and generalized.  Given that
+similarity, it is natural that part of our API is designed
+to manipulate our own non-persistent entities, whether or
+not they were obtained from the Database and whether or not
+they are intended to be sent to the Database.  Thus, we are
+designing a Relational Store which has some utility in its
+own right, but is primarily intended as an interface to an
+RDBMS.
+
+This system should be usable within the Server, as an
+upgrade on the Server Programming Interface or SPI.  It
+should also be usable from an Application, generally, but
+not necessarily in conjunction with a Database Connection.
+
+The RDBMS entities we are reflecting are
+- Ordered Multisets - Tables, Arrays, Tuples
+- Unordered Multisets - Relations
+- 
+- Types
+
+Some features we're NOT providing
+- Persistence (although checkpoints may be possible)
+- Full Relational Algebra Operations
+- Mutability
+	- Current exception:
+    - Creation of new entities within a Cache
+  - Possible future exceptions
+    - Monotonic additions to Tuple Multisets
+
+Features we're adding
+- Sum Types
+  - e.g. a Field could be a String OR an Image
+- Full nestability
+  - e.g. Cache with Array of Tuples with a field that's a Cache!
+
+The initial implementation of this system is within the
+PostgreSQL Server using its Server Programming Interface or
+SPI for the C Programming Language.  We hope to provide a
+Rust implementation in the future.  Because of the Impedance
+of the PostgreSQL SPI this implementation is not very
+efficient and parts of its implementation are unnecessarily
+complex.  If it should achieve enough utility and regard it
+may inspire a new SPI which would either incorporate its
+features directly or allow a better implementation.
+
+** Definition of Entities with Design and Implementation Notes
+
+*** Introduction
+
+All of the entities defined here, unless marked as
+(Abstract) are memory objects (sets of bytes) within a
+Memory Context.  They are either contiguous in memory or
+they are part of a simple and shallow tree structure,
+i.e. lacking cycles.  They are not persistent, i.e. they
+live in one or more (if using shared memory) memory images
+of running programs.  They will be lost if the programs
+providing their storage terminate.  They will normally use a
+true RDBMS as both a Tuple Source and a Tuple Sink.  It
+could be possible to store the memory area of this system in
+a memory mapped file, in which case snapshotting would also
+be possible.  Despite useful analogies, this system's
+entities should not be confused with the objects and
+entities of major programming languages or RDBMSs which are
+both much more complex and diverse than this system.
+
+Unless otherwise noted, all of the entities described in
+this section should be immutable once produced by an
+Operation.  The implementation language, e.g. C, should use
+appropriate const-qualifiers to enforce this at compile
+time!
+
+*** Memory Contexts
+
+Rather than implementing a Garbage Collection System, this
+design leverages the PostgreSQL concept of Memory Contexts,
+a forest of trees of memory arenas which are closed out
+children-first as (possibly nested) Operations and (possibly
+nested) Transactions complete in a stack-like fashion.  Part
+of the motivation for this system is to automatically ensure
+that data references are invalidated if anything they refer
+to has been deallocated.
+
+*** Tuples-Arrays, Tuples, Tuple Types, Fields
+
+A Tuple-Array consists of
+- An Array of Tuples, each of the same Type and Storage-Strategy
+- A Tuple-Descriptor, describing the commonalities of its Tuples
+- A reference to the Memory-Context it is allocated within
+- Possible additional storage for Variable-Sized Field-Data.
+
+A Tuple aka Row-Entity consists of
+- An Ordered-Set of Fields, each of a specified Type
+- Possibly a reference to its Tuple-Array, i.e. via a pointer or
+  offset.
+- Tuples have a specific Row Number within their Tuple-Array
+
+A Tuple-Type is an Array of the Types of its constituent
+Fields.
+
+*** Safe Typed Entity References
+
+A Memory-ID is a one-word value which can be used to cheaply
+determine whether the Memory-Context containing a referenced
+entity is still valid.
+
+A Tuple-Array-Reference consists of
+- A reference (e.g. a Pointer) to a Tuple-Array
+- A Memory-ID
+
+A Tuple-Reference consists of
+- A reference to a Tuple (as described in the Note below)
+- A Memory-ID
+
+Note: a Tuple might be referenced either by
+1. A reference (e.g. a Pointer) to a Tuple-Array plus a Row Number
+2. A direct Pointer to a Tuple
+  - requires Tuples to each have an embedded reference to their Tuple-Array
+
+A Field-Reference consists of
+- A reference to a Tuple (as described in the Note above)
+- A Memory-ID.
+
+The Field-Reference Type replaces the Datum Type in the old SPI API.
+
+Note: All of these Entity-Reference Types can be
+- first checked for memory validity
+- then checked for type and other appropriate metadata, e.g. size
+- before accessing any data behind the reference
+
+*** Storage Strategies
+
+A Tuple-Descriptor includes a Tuple-Type along with the
+Storage-Strategies of each Tuple
+
+Tuples indirectly reference their Tuple-Descriptor via their
+reference to their Tuple-Array.
+
+Tuples indirectly reference their Memory-Context via their
+reference to their Tuple-Array.
+
+An Array is a contiguous sequence of elements, all of the
+same Type and Storage-Strategies.
+
+An Ordered-Set is a contiguous sequence of elements which
+may have varying Types and Storage requirements.
+
+If any of the consitutent parts of an Array or an
+Ordered-Set are of variable size, then some or all of the
+storage of those parts may be stored elsewhere in the
+containing Result-Set, according to the Storage-Strategy for
+that part.
+
+** Some Key Operations
+
+A family of Copy*Tuples functions designed to copy one or
+more Tuples from one or more Tuple-Arrays into a new Tuple-Array
+in a specified Memory-Context as long as the corresponding
+Fields of the new Tuples have equivalent metadata according
+to their origin Tuple's Tuple-Descriptors.  Copy*Tuples
+functions copy or create the appropriate Tuple-Descriptor
+for the new Tuple-Array, along with any other Tuple-Array
+metadata.
+
+The most general Copy*Tuples function takes a specification
+of which fields are desired from each source Tuple-Array and
+only includs those Fields in the result Tuples.  The Types
+of the corresponding Fields, and therefore of the resulting
+Tuples must be the same.  The new Tuple-Array will contain a
+subset of the Tuples of the source Tuple-Arrays which will
+themselves contain a subset of the Fields of their source
+Tuples.
+
+Complex SPI Client Operations may need to collect data from
+multiple database operations or prior SPI Client Operations.
+This will often lead to SPI Client Operations using
+Copy*Tuples to collect the values needed into one or more
+Tuple-Arrays in a Memory-Context with sufficient persistence
+for all of the operations required, possibly with the
+persistence of an entire transaction.
+
+CallFunction takes a Field-Reference of Type RegProcedure
+describing a PostgreSQL Function, a Tuple-Array of appropriate
+arguments plus a Memory-Context; it calls that Function and
+returns a Tuple-Array of the result in the specified
+Memory-Context.  Either CallFunction also handles the new
+PostgreSQL Procedures or there's a similar CallProcedure
+operation.
+
+CreateQueryPlan takes a Field-Reference of type SQLQuery and
+returns a Field-Reference of Type QueryPlan.
+
+CallQuery takes a Field-Reference of type QueryPlan along
+with a Memory-Context and returns an appropriate Tuple-Array
+allocated in that Memory-Context.
+
+Functions, Procedures and Query Plans can have already
+created templates or optimized code for the Tuple-Arrays they
+return so that the overhead if no more than the overhead of
+copying that many bytes and advancing a pointer.
+
+** Dealing with Changes in the Database
+
+All of the above Entity and Opertion descriptions assume
+that all entities here are immutable.
+
+But what if changes in the Database render data in any
+Tuple-Arrays in long-lasting Memory-Contexts incorrect because
+of being out-of-date?
+
+There's an analogous situation with Materialized Views in
+the Database.  Ideally there would be metadata associated
+with a Materialized View which would make it easy to
+determine if any of the data from which they had been
+created has been changed or might have been changed.
+
+A fairly lightweight mechanism would be to have
+- a boolean field associated with each Materialized View
+  - indicating whether it can be trusted to be up-to-date
+- a reference to that Materialized View
+  -  associated with each source
+    - Table or Function
+- so Tables and Funcions would need an array of such
+
+A Materialized View's up-to-date flag would be cleared whenever
+- a Table source is updated
+- a Function source's definition is Replaced
+
+When a Materialied View is consulted, the View could first
+be Updated if its up-to-date flag is false.
+
+The query planner could optimize the above scheme by
+filtering out some or all Table Inserts and Updates which
+could not afffect each View - it could place appropriate
+triggers on each source table.
+
+It would be ideal to have the same or similar protection for
+our Tuple-Arrays in long-lived Memory-Contexts.  We would use
+Smart-Entity-References for components of any such long
+lived Tuple-Arrays.  Appropriate C-Types would keep
+Smart-Entity-References separate from regular
+Entity-References.  At connection establishment time or
+lazily, we would create a graph of pure functions returning
+fresh Result-Sets and Entity-References which would be
+re-run as needed whenever we tried to use a
+Smart-Entity-Reference any of whose sources were no longer
+up-to-date.  Smart-Entity-references would simply be
+pointers into a collection of structures managing these
+relationships, including a value, a flag (or flag-value) and
+an update function to call if the flag or flag-value
+indicated that the value might be out-of-date.
+
+One of the key PostgreSQL enhancements would be an ability
+to place triggers on PostgreSQL system tables implementing
+the equivlent of foreign key constraints so that we can be
+sure, e.g. that we're referencing the RegTypes and
+RegProcedures that were in effect when we created Tuple-Arrays
+dependent on them.
+
+In practice, a combination of the above approaches would be
+ideal.  Result-Sets unlikely to be needed beyond a
+particular call to a client's SQL Function would be handled
+with procedural code and any Tuple-Arrays would be deallocated
+when that SQL Function terminated.
+
+Desired PostgreSQL extensions:
+- Foreign key references to System Tables
+- Triggers associable with foreign key references
+- Ability lock dependent tables or subsets thereof in memory

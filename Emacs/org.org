@@ -1,0 +1,19 @@
+# Comments require the space after the #
+# Remove the space after the # to activate the #+ directives!
+# * 
+# +TITLE: Org Mode Notes
+# +SUBTITLE:  Features Worth Noting Down
+# #+AUTHOR: _
+# #+DATE: _
+# +OPTIONS: toc:nil 
+# +OPTIONS: num:nil
+# +OPTIONS: date:nil 
+# +OPTIONS: author:nil 
+# +MACRO: NEWLINE @@latex:\\@@ @@html:<br>@@ @@ascii:|@@
+# (insert (expand-file-name (buffer-file-name)))
+
+# * 
+** First Section {{{NEWLINE}}} and More!
+
+** Easy Templates NOW C-c C-,
+The old <s TAB and such are now replaced with C-c C-,
