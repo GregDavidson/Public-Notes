@@ -1,0 +1,9 @@
+* Notes on Miscellaneous Things
+
+These notes are primarily for myself, as a reminder of features which I want to
+remember about various things. Some of these notes could possibly be helpful to
+others - perhaps you! - especially when I give a reference to specific notes. I
+will make a modest effort to make them intelligible to others and I make no
+promises as to the result of such! Feel free to clone any of these files and
+feel free to send me pull requests if you have a sense that you've significantly
+extended their utility.
