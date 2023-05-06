@@ -1,5 +1,7 @@
 * psql client for PostgreSQL Notes
 
+[[https://www.postgresql.org/docs/current/app-psql.html][psql in current PostgreSQL manual]]
+
 ** Show psql Hidden Magic
 
 - -E :: option argument
