@@ -4,6 +4,10 @@ Merge with Postgres Notes under Wicci?  Anywhere else?
 
 ** Arrays
 
+PostgreSQL Doc links
+- [[https://www.postgresql.org/docs/current/arrays.html][Arrays]]
+- [[https://www.postgresql.org/docs/current/functions-array.html][Array Functions & Operators]]
+
 #+begin_src sql
   CREATE TABLE tictactoe (
     squares   integer[3][3]
@@ -12,11 +16,25 @@ Merge with Postgres Notes under Wicci?  Anywhere else?
 
 PostgreSQL ignores array sizes and number of dimensions!  Giving such is just a comment!
 
+** Common Table Expressions
+
+PostgreSQL Documentation Links
+- [[https://www.postgresql.org/docs/current/queries-with.html][WITH Queries]]
+      - 7.8.2. Recursive Queries
+      - 7.8.2.1. Search Order
+            - Note general method
+                  - Can order by a heuristic!
+                  - Special syntaxes for
+                        - ORDER BY depth
+                        - ORDER BY breadth
+            - cycle detection techniques
+                  - special syntax for that as well!
+
 ** Table Functions ROWS FROM and WITH ORDINALITY and more!
 
 Very interesting features I didn't know about:
 
-https://www.postgresql.org/docs/12/queries-table-expressions.html
+[[https://www.postgresql.org/docs/current/queries-table-expressions.html][Table Expressions]]
 
 WITH ORDINALITY might be a way I can preserve the order of, e.g. HTML Headers!!
 
