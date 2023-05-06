@@ -2,6 +2,16 @@
 
 Merge with Postgres Notes under Wicci?  Anywhere else?
 
+** Arrays
+
+#+begin_src sql
+  CREATE TABLE tictactoe (
+    squares   integer[3][3]
+);
+#+end_src
+
+PostgreSQL ignores array sizes and number of dimensions!  Giving such is just a comment!
+
 ** Table Functions ROWS FROM and WITH ORDINALITY and more!
 
 Very interesting features I didn't know about:
