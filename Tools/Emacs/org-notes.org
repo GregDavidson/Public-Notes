@@ -3,6 +3,22 @@
 Strategies and tactics for increasing my leveraging of =OrgMode= 
 as part of my overall [[file:/home/greg/Notes/Bootstrapping/bootstrapping-notes.org][Bootstrapping Strategies]].
 
+** Configuring Spacemacs
+
+*** Examine & Modify .spacemacs
+
+- sp f e d :: edit .spacemacs
+- sp f e R :: process new .spacemacs
+
+** Easy Links
+Links between OrgMode Files
+- SPC a o l :: org-store-link creates a link to the current section of the current file
+- C-c C-l :: org-insert-link inserts the link using a relative pathname if in
+  the same directory or a subdirectory, absolute otherwise.
+
+[[Https://orgmode.org/manual/Hyperlinks.html][OrgMode Hyperlinks]]
+- [[https://orgmode.org/manual/External-Links.html][External Link Types]]
+- [[https://orgmode.org/manual/Handling-Links.html][Handling Links]]
 ** Org Capture
 
 Review and revisit Org Capture system
@@ -12,10 +28,72 @@ Review and revisit Org Capture system
 Get Org working well on my phone
 - Can any of the apps be driven from GitHub??
 
+Can I get a native Android emacsclient to talk to my termux emacs??
+
 ** Scheduling
 
+- C-c C-t :: TODO --> DONE
+
 Learn agenda-related functionality at least adequately!
-- Bridge OrgAgenda with Google Calendar
+- Bridge OrgAgenda with Google Calendar??
+
+** Org-Babel and Language Support
+*** PlantUML
+
+- Need to customize two varaibles
+  - org-plantuml-jar-path for things to work
+  - plantuml-jar-path to avoid error message even though things work
+
+*** TODO Get ob-prolog working
+
+- [[https://github.com/ljos/ob-prolog][ob-prolog]]
+- [[https://github.com/ljos/ob-prolog/issues/22][Issue for Prolog Output and Goal]]
+
+*** Python
+Following [[https://develop.spacemacs.org/layers/+lang/python/README.html][Spacemacs python layer README]]
+
+1. Added python to dotspacemacs-configuration-layers
+2. Added (python . t) to org-babel-load-languages 
+
+This did not suffice for org-babel.  Trying C-c C-c on
+#+BEGIN_SRC python
+  myresult = 42 * 23
+  print('Hello Europe! ' + str(myresult))
+#+END_SRC
+
+got me
+#+begin_example
+/bin/bash: python: command not found
+[ Babel evaluation exited with code 127 ]
+#+end_example
+
+After
+#+begin_src sh
+  sudo ln -s /usr/bin/python3 /usr/bin/python
+#+end_src
+
+It runs, but gives
+#+RESULTS:
+: None
+
+I decided to go "all in" on python-lsp-server with
+#+begin_src sh
+  sudo apt-install python-pip
+  sudo pip install 'python-lsp-server[all]'
+#+end_src
+
+Same results when I run it.
+
+OK, I'm consulting the wrong manual.  I should really consult
+- [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][ob-doc-python]]
+
+This works
+#+BEGIN_SRC python
+  myresult = 42 * 23
+  return 'Hello Europe! ' + str(myresult)
+#+END_SRC	  
+
+- Question :: How can I get the result of python print using org-babel??
 
 ** OrgMode Export
 
@@ -43,3 +121,28 @@ Study Export Architecture
 Write =elisp= to pre-process OrgMode files before export
 
 Write external scripts to pre-process OrgMode files before export
+
+** Org Research Questions
+
+*** Learn more about [[https://orgmode.org/orgguide.html#Include-Files][export include files]]
+
+#+begin_example
+12.4 Include Files
+
+During export, you can include the content of another file. For example, to include your ‘.emacs’ file, you could use:
+
+#+INCLUDE: "~/.emacs" src emacs-lisp
+
+The first parameter is the file name to include. The optional second parameter specifies the block type: ‘example’, ‘export’ or ‘src’. The optional third parameter specifies the source code language to use for formatting the contents. This is relevant to both ‘export’ and ‘src’ block types.
+
+You can visit the included file with C-c '. 
+#+end_example
+
+*** Learn to use the linter
+
+From [[https://orgmode.org/manual/Internal-Links.html][orgmode Internal-Links]]
+#+begin_quote
+Note that you must make sure custom IDs, dedicated targets, and names are unique
+throughout the document. Org provides a linter to assist you in the process, if
+needed. See [[https://orgmode.org/manual/Org-Syntax.html][Org Syntax]].
+#+end_quote

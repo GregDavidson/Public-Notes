@@ -39,9 +39,21 @@ LaTeX macros can be included: $x_2 = \alpha + \beta^2 - \gamma$.
 This text will be indented on both the left margin and the right margin.
 #+END_QUOTE
 
+Blocks (like QUOTE above) can be easily inserted with C-c C-,
+
+
 : Text to be displayed verbatim (as-is), without markup 
 : (*bold* does not change font), e.g., for source code. 
 : Line breaks are respected. 
+
+Use C-c C-c to run this code: 
+#+BEGIN_SRC python
+  myresult = 42 * 23
+  return 'Hello Europe! ' + str(myresult)
+#+END_SRC	  
+
+#+RESULTS:
+: Hello Europe! 966
 
 Some MATLAB source code:
 #+BEGIN_SRC matlab
@@ -55,26 +67,6 @@ Some arbitrary text to be typeset verbatim in monospace font:
 Apples, oranges,
 cucumbers, tomatoes
 #+END_SRC
-
-TAB will expand the following handy shortcuts:
-|----------+------------------|
-| Sequence | Expands to       |
-|----------+------------------|
-| <s       | #+BEGIN_SRC      |
-| <e       | #+BEGIN_EXAMPLE  |
-| <q       | #+BEGIN_QUOTE    |
-| <v       | #+BEGIN_VERSE    |
-| <V       | #+BEGIN_VERBATIM |
-| <c       | #+BEGIN_CENTER   |
-| <l       | #+BEGIN_LaTeX    |
-| <L       | #+LaTeX          |
-| <h       | #+BEGIN_HTML     |
-| <H       | #+HTML           |
-| <a       | #+BEGIN_ASCII    |
-| <A       | #+ASCII:         |
-| <i       | #+INDEX:         |
-| <I       | #+INCLUDE:       |
-|----------+------------------|
 
 # Table and spreadsheet.  The column headed "Ratio" is automatically
 # calculated by hitting C-c C-c in Emacs on the #+TBLFM line.
