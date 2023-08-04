@@ -11,50 +11,66 @@ extended their utility.
 Feel free to browse this repository and even to clone it as a starting point for
 your own notes.
 
+
 ** Notes on Various Software Tools
 
-- [[file:Tools/Bash/bash-notes.org][Tools/Bash/bash-notes.org]]
-- [[file:Tools/dpkg.org][Tools/dpkg.org]]
-- [[file:Tools/Emacs/emacs-goodies.org][Tools/Emacs/emacs-goodies.org]]
-- [[file:Tools/Emacs/emacs-issues.org][Tools/Emacs/emacs-issues.org]]
-- [[file:Tools/Emacs/emacs-lisp.org][Tools/Emacs/emacs-lisp.org]]
-- [[file:Tools/Emacs/emacs-mh.org][Tools/Emacs/emacs-mh.org]]
-- [[file:Tools/Emacs/emacs-packages.org][Tools/Emacs/emacs-packages.org]]
-- [[file:Tools/Emacs/emacs-prelude.org][Tools/Emacs/emacs-prelude.org]]
-- [[file:Tools/Emacs/emacs-sql-details.org][Tools/Emacs/emacs-sql-details.org]]
-- [[file:Tools/Emacs/emacs-sql.org][Tools/Emacs/emacs-sql.org]]
-- [[file:Tools/Emacs/orgcard.org][Tools/Emacs/orgcard.org]]
-- [[file:Tools/Emacs/org-cheat-sheet.org][Tools/Emacs/org-cheat-sheet.org]]
-- [[file:Tools/Emacs/org-notes.org][Tools/Emacs/org-notes.org]]
-- [[file:Tools/Emacs/org.org][Tools/Emacs/org.org]]
-- [[file:Tools/Emacs/spacemacs.org][Tools/Emacs/spacemacs.org]]
-- [[file:Tools/find.org][Tools/find.org]]
-- [[file:Tools/Firefox/firefox.org][Tools/Firefox/firefox.org]]
-- [[file:Tools/firefox.org][Tools/firefox.org]]
-- [[file:Tools/Git/github-notes.org][Tools/Git/github-notes.org]]
-- [[file:Tools/Git/git-notes-old.org][Tools/Git/git-notes-old.org]]
-- [[file:Tools/Git/git-notes.org][Tools/Git/git-notes.org]]
-- [[file:Tools/GUI-Desktop/kde-desktop.org][Tools/GUI-Desktop/kde-desktop.org]]
-- [[file:Tools/GUI-Desktop/README.org][Tools/GUI-Desktop/README.org]]
-- [[file:Tools/GUI-Desktop/xmonad.org][Tools/GUI-Desktop/xmonad.org]]
-- [[file:Tools/mate.org][Tools/mate.org]]
-- [[file:Tools/Multi-Media/video-tools.org][Tools/Multi-Media/video-tools.org]]
-- [[file:Tools/Postgres/postgres-notes.org][Tools/Postgres/postgres-notes.org]]
-- [[file:Tools/Postgres/postgres-spi-notes.org][Tools/Postgres/postgres-spi-notes.org]]
-- [[file:Tools/Postgres/postgres-spi-redesign.org][Tools/Postgres/postgres-spi-redesign.org]]
-- [[file:Tools/Postgres/postgres-tutorial-notes.org][Tools/Postgres/postgres-tutorial-notes.org]]
-- [[file:Tools/Postgres/psql-notes.org][Tools/Postgres/psql-notes.org]]
-- [[file:Tools/tar.org][Tools/tar.org]]
-- [[file:Tools/Termux/termux-notes.org][Tools/Termux/termux-notes.org]]
-- [[file:Tools/zoom.org][Tools/zoom.org]]
+#+begin_src sh
+  find Tools/ -name '*.org' | sort | sed 's/\(.*\)/[[file:\1][\1]]/'
+#+end_src
+
+#+RESULTS:
+| [[file:Tools/Bash/bash-notes.org][Tools/Bash/bash-notes.org]]                  |
+| [[file:Tools/dpkg.org][Tools/dpkg.org]]                             |
+| [[file:Tools/Emacs/emacs-goodies.org][Tools/Emacs/emacs-goodies.org]]              |
+| [[file:Tools/Emacs/emacs-issues.org][Tools/Emacs/emacs-issues.org]]               |
+| [[file:Tools/Emacs/emacs-lisp.org][Tools/Emacs/emacs-lisp.org]]                 |
+| [[file:Tools/Emacs/emacs-mh.org][Tools/Emacs/emacs-mh.org]]                   |
+| [[file:Tools/Emacs/emacs-packages.org][Tools/Emacs/emacs-packages.org]]             |
+| [[file:Tools/Emacs/emacs-prelude.org][Tools/Emacs/emacs-prelude.org]]              |
+| [[file:Tools/Emacs/emacs-sql-details.org][Tools/Emacs/emacs-sql-details.org]]          |
+| [[file:Tools/Emacs/emacs-sql.org][Tools/Emacs/emacs-sql.org]]                  |
+| [[file:Tools/Emacs/orgcard.org][Tools/Emacs/orgcard.org]]                    |
+| [[file:Tools/Emacs/org-cheat-sheet.org][Tools/Emacs/org-cheat-sheet.org]]            |
+| [[file:Tools/Emacs/org-notes.org][Tools/Emacs/org-notes.org]]                  |
+| [[file:Tools/Emacs/org.org][Tools/Emacs/org.org]]                        |
+| [[file:Tools/Emacs/spacemacs.org][Tools/Emacs/spacemacs.org]]                  |
+| [[file:Tools/find.org][Tools/find.org]]                             |
+| [[file:Tools/Firefox/firefox.org][Tools/Firefox/firefox.org]]                  |
+| [[file:Tools/firefox.org][Tools/firefox.org]]                          |
+| [[file:Tools/Git/github-notes.org][Tools/Git/github-notes.org]]                 |
+| [[file:Tools/Git/git-notes-old.org][Tools/Git/git-notes-old.org]]                |
+| [[file:Tools/Git/git-notes.org][Tools/Git/git-notes.org]]                    |
+| [[file:Tools/GUI-Desktop/kde-desktop.org][Tools/GUI-Desktop/kde-desktop.org]]          |
+| [[file:Tools/GUI-Desktop/README.org][Tools/GUI-Desktop/README.org]]               |
+| [[file:Tools/GUI-Desktop/xmonad.org][Tools/GUI-Desktop/xmonad.org]]               |
+| [[file:Tools/mate.org][Tools/mate.org]]                             |
+| [[file:Tools/Multi-Media/video-tools.org][Tools/Multi-Media/video-tools.org]]          |
+| [[file:Tools/Postgres/postgres-notes.org][Tools/Postgres/postgres-notes.org]]          |
+| [[file:Tools/Postgres/postgres-spi-notes.org][Tools/Postgres/postgres-spi-notes.org]]      |
+| [[file:Tools/Postgres/postgres-spi-redesign.org][Tools/Postgres/postgres-spi-redesign.org]]   |
+| [[file:Tools/Postgres/postgres-tutorial-notes.org][Tools/Postgres/postgres-tutorial-notes.org]] |
+| [[file:Tools/Postgres/psql-notes.org][Tools/Postgres/psql-notes.org]]              |
+| [[file:Tools/tar.org][Tools/tar.org]]                              |
+| [[file:Tools/Termux/termux-notes.org][Tools/Termux/termux-notes.org]]              |
+| [[file:Tools/Zoom/communications-zoom.org][Tools/Zoom/communications-zoom.org]]         |
+| [[file:Tools/Zoom/zoom-meet-burning.org][Tools/Zoom/zoom-meet-burning.org]]           |
+| [[file:Tools/Zoom/zoom-meet-limitless.org][Tools/Zoom/zoom-meet-limitless.org]]         |
+| [[file:Tools/Zoom/zoom-meet-personal.org][Tools/Zoom/zoom-meet-personal.org]]          |
+| [[file:Tools/Zoom/zoom.org][Tools/Zoom/zoom.org]]                        |
 
 ** Notes On Various Programming Languages
 
-- [[file:Langs/Declarative/ciao-prolog.org][Langs/Declarative/ciao-prolog.org]]
-- [[file:Langs/Declarative/prolog-notes.org][Langs/Declarative/prolog-notes.org]]
-- [[file:Langs/javascript-next.org][Langs/javascript-next.org]]
-- [[file:Langs/Procedural/Rust/rust-book-second.org][Langs/Procedural/Rust/rust-book-second.org]]
-- [[file:Langs/Procedural/Rust/rust-notes.org][Langs/Procedural/Rust/rust-notes.org]]
-- [[file:Langs/racket-notes.org][Langs/racket-notes.org]]
-- [[file:Langs/Scripting/Bash/bash.org][Langs/Scripting/Bash/bash.org]]
-- [[file:Langs/Scripting/Bash/bash-scripting.org][Langs/Scripting/Bash/bash-scripting.org]]
+#+begin_src sh
+  find Langs/ -name '*.org' | sort | sed 's/\(.*\)/[[file:\1][\1]]/'
+#+end_src
+
+#+RESULTS:
+| [[file:Langs/Declarative/ciao-prolog.org][Langs/Declarative/ciao-prolog.org]]          |
+| [[file:Langs/Declarative/prolog-notes.org][Langs/Declarative/prolog-notes.org]]         |
+| [[file:Langs/javascript-next.org][Langs/javascript-next.org]]                  |
+| [[file:Langs/Procedural/Rust/rust-book-second.org][Langs/Procedural/Rust/rust-book-second.org]] |
+| [[file:Langs/Procedural/Rust/rust-notes.org][Langs/Procedural/Rust/rust-notes.org]]       |
+| [[file:Langs/racket-notes.org][Langs/racket-notes.org]]                     |
+| [[file:Langs/Scripting/Bash/bash.org][Langs/Scripting/Bash/bash.org]]              |
+| [[file:Langs/Scripting/Bash/bash-scripting.org][Langs/Scripting/Bash/bash-scripting.org]]    |
+
