@@ -11,6 +11,8 @@ extended their utility.
 Feel free to browse this repository and even to clone it as a starting point for
 your own notes.
 
+If you clone this repository, the one-line scripts below will generate handy
+links to all of the OrgMode files in the repository.
 
 ** Notes on Various Software Tools
 
@@ -73,4 +75,3 @@ your own notes.
 | [[file:Langs/racket-notes.org][Langs/racket-notes.org]]                     |
 | [[file:Langs/Scripting/Bash/bash.org][Langs/Scripting/Bash/bash.org]]              |
 | [[file:Langs/Scripting/Bash/bash-scripting.org][Langs/Scripting/Bash/bash-scripting.org]]    |
-
