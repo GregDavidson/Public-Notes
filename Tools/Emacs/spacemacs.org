@@ -1,12 +1,16 @@
 * Spacemacs Notes
 
+** Prefixes
+
 | *Evil*          | *Emacs*       | *Description*           |
+|-----------------+---------------+-------------------------|
 | SP aka Spacebar | M-m aka Alt-m | Begin Spacemacs Binding |
 | SP u            | Ctrl-u        | Universal Argument      |
 
 ** Handy Commands to Learn
 
 | *Evil* | *Emacs* | *Spacemacs Function*   | *Notes*               |
+|--------+---------+------------------------+-----------------------|
 | SP T n | M-m T n | cycle-spacemacs-theme  |                       |
 | SP T s | M-m T s | helm-themes            |                       |
 | SP t S | M-m t s | toggle-syntax-checking | toggles spellchecking |
@@ -14,15 +18,22 @@
 ** Temporary Font Scaling
    
 | *Evil* | *Emacs* | *Description*                                       |
+|--------+---------+-----------------------------------------------------|
 | SP z f | M-m z f | Zoom all buffers in current frame including pop-ups |
 | SP z x | M-m z x | Scale the font of only the current buffer           |
 
 ** Spacemacs Configuration
 
-| *Evil*   | *Command*                              | *Notes*       |
+| *Evil*   | *Command*                              | *Notes*                  |
+|----------+----------------------------------------+--------------------------|
 | SP f e R | dotspacemacs/sync-configuration-layers | after editing .spacemacs |
 
-* Problem Reports
+** Evil Issues
+How can I make Evil behave more like Vi?
+- . doesn't repeat insertions
+- < and > don't seem to select the lines I need
+
+** Problem Reports
 
 On 3 November 2021 I downloaded spacemacs anew.  I'm using development mode.  When it rebuilt it said:
 #+BEGIN_EXAMPLE
