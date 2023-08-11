@@ -1,7 +1,0 @@
-* Zoom Notes
-
-** Package Install
-
-The Zoom package requires installation of
-ibus
-libxcb-xtest0
