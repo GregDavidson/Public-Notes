@@ -1,5 +1,25 @@
 * Rust Notes
 
+** Rust Resources & Tutorials
+
+*** Rust Game Development
+
+[[https://gamedev.rs/][Rust GameDev Working Group]]
+- They have a Monthly News!
+
+*** Rust for the ABSOLUTE Beginner Video Tutorials
+
+[[https://www.youtube.com/watch?v=bXy45jGCiQI][Moving Ownership and Functions!]]
+
+*** Async/Await
+
+How I Finally Understood async/await in Rust
+
+1. https://hegdenu.net/posts/understanding-async-await-1/
+2. https://hegdenu.net/posts/understanding-async-await-2/
+3. https://hegdenu.net/posts/understanding-async-await-3/
+4. coming
+
 ** Wednesday  5 July 2017
 
 *** Reader::read_line
