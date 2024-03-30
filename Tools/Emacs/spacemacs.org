@@ -7,16 +7,19 @@
 | SP aka Spacebar | M-m aka Alt-m | Begin Spacemacs Binding |
 | SP u            | Ctrl-u        | Universal Argument      |
 
+- Toggle Evil :: =C-z=
+
 ** Handy Commands to Learn
 
-| *Evil* | *Emacs* | *Spacemacs Function*   | *Notes*               |
-|--------+---------+------------------------+-----------------------|
-| SP T n | M-m T n | cycle-spacemacs-theme  |                       |
-| SP T s | M-m T s | helm-themes            |                       |
-| SP t S | M-m t s | toggle-syntax-checking | toggles spellchecking |
+| *Evil*   | *Emacs*   | *Spacemacs Function*                   | *Notes*               |
+|----------+-----------+----------------------------------------+-----------------------|
+| SP T n   | M-m T n   | cycle-spacemacs-theme                  |                       |
+| SP T s   | M-m T s   | helm-themes                            |                       |
+| SP t S   | M-m t s   | toggle-syntax-checking                 | toggles spellchecking |
+| SP f e R | M-m f e R | dotspacemacs/sync-configuration-layers | reloads .spacemacs    |
 
 ** Temporary Font Scaling
-   
+
 | *Evil* | *Emacs* | *Description*                                       |
 |--------+---------+-----------------------------------------------------|
 | SP z f | M-m z f | Zoom all buffers in current frame including pop-ups |
@@ -57,3 +60,48 @@ You appear to be setting environment variables ("PATH") in your .bashrc or .zshr
   - By setting this to a small number
      - usually 1 or 2
   - one can more clearly distinguish sub-items in a list.
+
+** Evil Ideas
+
+From [[https://web.archive.org/web/20180723155724/http://makble.com/how-to-toggle-evil-mode-in-emacs][How To Toggle Evil Mode In Emacs]]
+#+begin_src elisp
+  defun toggle-evilmode ()
+  (interactive)
+  (if (bound-and-true-p evil-local-mode)
+    (progn
+      ; go emacs
+      (evil-local-mode (or -1 1))
+      (undo-tree-mode (or -1 1))
+      (set-variable 'cursor-type 'bar)
+    )
+    (progn
+      ; go evil
+      (evil-local-mode (or 1 1))
+      (set-variable 'cursor-type 'box)
+    )
+  )
+)
+ 
+(global-set-key (kbd "M-u") 'toggle-evilmode)
+#+end_src
+
+** Things Not Working
+
+*** ob-racket not working
+- it's not getting loaded
+
+#+begin_src elisp
+  (require 'ob-racket)
+#+end_src
+
+*** ob-prolog not working
+Current Status
+- commented out in .spacemacs
+
+** My Hacks
+
+Following
+- [[https://emacs.stackexchange.com/questions/22338/spacemacs-move-org-mode-customization-to-separate-file][StackExchange: Spacemacs - move org-mode customization to separate file]]
+I added code in .spacemacs to look for
+- a subdirectory called extra in every layer
+- put it on the load-path if it's found

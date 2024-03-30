@@ -32,6 +32,8 @@ You can also edit local files as root with either of the following (note the dou
 - C-x C-f /su::/etc/hosts -- didn't work
 - C-x C-f /sudo::/etc/hosts -- didn't work
 - C-x C-f /sudo:root@localhost:/etc/hosts -- worked!
+
+- C-x C-f /shh:touch@localhost:<PATH WITH COMPLETION> -- worked!
 ** Elisp
 ; usually not needed, but can do no harm:
 #+BEGIN_SRC

@@ -10,7 +10,7 @@ as part of my overall [[file:/home/greg/Notes/Bootstrapping/bootstrapping-notes.
 - sp f e d :: edit .spacemacs
 - sp f e R :: process new .spacemacs
 
-** Easy Links
+** Easy Links and Transclusion
 Links between OrgMode Files
 - SPC a o l :: org-store-link creates a link to the current section of the current file
 - C-c C-l :: org-insert-link inserts the link using a relative pathname if in
@@ -19,6 +19,11 @@ Links between OrgMode Files
 [[Https://orgmode.org/manual/Hyperlinks.html][OrgMode Hyperlinks]]
 - [[https://orgmode.org/manual/External-Links.html][External Link Types]]
 - [[https://orgmode.org/manual/Handling-Links.html][Handling Links]]
+
+Transclusion
+- [[https://nobiot.github.io/org-transclusion/][Org-transclusion User Manual]]
+- [[https://github.com/nobiot/org-transclusion#readme--org-transclusion][Org-transclusion Github Repository]]
+
 ** Org Capture
 
 Review and revisit Org Capture system

@@ -2,6 +2,15 @@
 
 Merge with Postgres Notes under Wicci?  Anywhere else?
 
+** New Features to Use
+
+*** PG16
+
+**** PL/PgSQL
+
+get the current function's OID in PL/pgSQL
+- =GET DIAGNOSTICS variable = PG_ROUTINE_OID=
+
 ** Arrays
 
 PostgreSQL Doc links
