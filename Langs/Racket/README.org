@@ -1,0 +1,13 @@
+* Racket Notes
+
+- [[file:racket-graphics.org][Racket Graphics Notes]]
+- [[file:racket-notes.org][Racket Guide and Reference Notes]]
+- [[file:typed-racket-notes.org][Typed Racket Guide and Reference Notes]]
+
+** Web Links
+
+*** [[https://racket-lang.org][Racket Website]]
+
+*** [[https://docs.racket-lang.org][Racket Documentation]]
+
+*** [[https://pkgs.racket-lang.org][The Official Racket Package Catalog]]

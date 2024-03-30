@@ -1,0 +1,703 @@
+* Typed Racket Guide and Reference Notes
+
+I'll mostly allow /The Typed Racket Guide/ to organize these notes.
+- The Guide provides most of the needed links into the Reference.
+
+* [[https://docs.racket-lang.org/ts-guide][The Typed Racket Guide]]
+
+** [[https://docs.racket-lang.org/ts-guide/quick.html][1 Quick Start]]
+
+** [[https://docs.racket-lang.org/ts-guide/beginning.html][2 Beginning Typed Racket]]
+
+*** [[https://docs.racket-lang.org/ts-guide/beginning.html#%28part._.Datatypes_and_.Unions%29][2.1 Datatypes and Unions]]
+
+*** [[https://docs.racket-lang.org/ts-guide/more.html#%28part._.Type_.Annotation_and_.Binding_.Forms%29][3.1 Type Annotation and Binding Forms]]
+
+Top Level Definition
+#+begin_src racket
+  (: x Number)
+  (define x 7)
+#+end_src
+
+Internal Definition
+#+begin_src racket
+  (let ()
+    (: x Number)
+    (define x 7)
+    (add1 x) )
+#+end_src
+
+Integrated with binding forms
+#+begin_src racket
+  (define x : Number 7)
+  (define (id [z : Number]) : Number z)
+#+end_src
+
+Local Bindings
+- inferred for let and let* forms
+#+begin_src racket
+  (let-values ( [([x : Number] [y : String]) (values 7 "hello")] )
+    (+ x (string-length y)) )
+#+end_src
+The let*-values and letrec-values forms are similar
+
+Functions
+
+#+begin_src racket
+      (lambda ([x : Number] [y : String]) (+ x 5))
+#+end_src
+
+This function has the type =(-> String Number * Number)=
+- It accepts at least one String
+- followed by arbitrarily many Numbers.
+- In the body, y is a list of Numbers.
+#+begin_src racket
+      (lambda ([x : String] . [y : Number *]) (apply + y))
+#+end_src
+
+This function has the type =(case-> (-> Number) (-> Number Number))=
+#+begin_src racket
+  (case-lambda [() 0]
+               [([x : Number]) x] )
+#+end_src
+
+Single Variables
+
+This is equivalent to the earlier use of let:
+#+begin_src racket
+  (let ([#{x : Number} 7]) (add1 x))
+#+end_src
+
+This is useful for binding forms lacking Typed Racket counterparts, e.g.
+=match=:
+#+begin_src racket
+  (: assert-symbols! ((Listof Any) -> (Listof Symbol)))
+  (define (assert-symbols! lst)
+    (match lst
+      [(list (? symbol? #{s : (Listof Symbol)}) ...) s]
+      [_ (error "expected only symbols, given" lst)] ) )
+#+end_src
+
+Expressions
+#+begin_src racket
+  (ann (+ 7 1) Number)
+#+end_src
+
+*** [[https://docs.racket-lang.org/ts-guide/more.html#%28part._.Type_.Inference%29][3.2 Type Inference]]
+
+- bindings using let and let*
+- top-level (literal) constant definitions
+- parameter types for loops
+
+*** [[https://docs.racket-lang.org/ts-guide/more.html#%28part._when-annotations~3f%29][3.2.1 When do you need type annotations?]]
+
+- define form of
+      - function
+      - mutable variable
+- lambda
+      - immediately bound to a variable
+      - argument to a polymorphic function
+
+*** [[https://docs.racket-lang.org/ts-guide/more.html#%28part._.New_.Type_.Names%29][3.3 New Type Names]]
+
+Any type can be given a name with =define-type=.
+- Example: =(define-type NN (-> Number Number))=
+      - =NN= will be expanded to =(-> Number Number)= everywhere
+- Type names may be (mutually) recursive
+
+** [[https://docs.racket-lang.org/ts-guide/more.html][3 Specifying Types]]
+
+** [[https://docs.racket-lang.org/ts-guide/types.html][4 Types in Typed Racket]]
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Types_for_.Functions_with_.Optional_or_.Keyword_.Arguments%29][4.3 Types for Functions with Optional or Keyword Arguments]]
+
+- =(->* () (Number) Number)=
+      - no mandatory arguments
+      - one optional argument with type Number
+      - returns a Number
+- =(->* (String String) Boolean)=
+      - equivalent to =(-> String String Boolean)=
+      - two mandatory arguments
+      - no optional arguments
+      - produces a Boolean
+- =(->* (#:x Number) (#:y Number) (values Number Number))=
+      - mandatory argument with keyword #:x
+      - optional argument with keyword #:y
+      - produces two values of type Number
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Union_.Types%29][4.4 Union Types]]
+
+#+begin_src racket repl
+> (let ( [a-number 37] )
+       (if (even? a-number) 'yes 'no) )
+- : (U 'no 'yes)
+'no
+#+end_src
+
+Any number of types can be combined together in a union
+- Example: =(U Number String Boolean Char)=
+- nested unions are flattened
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Recursive_.Types%29][4.5 Recursive Types]]
+
+Directly Recursive
+#+begin_src racket
+  (define-type BinaryTree (U Number (Pair BinaryTree BinaryTree)))
+#+end_src
+
+Mutually Recursive
+#+begin_src racket
+  (define-type BinaryTree (U BinaryTreeLeaf BinaryTreeNode))
+  (define-type BinaryTreeLeaf Number)
+  (define-type BinaryTreeNode (Pair BinaryTree BinaryTree))
+#+end_src
+
+Recursive types can be created anonymously using the Rec type constructor
+- [[https://docs.racket-lang.org/ts-reference/type-ref.html#%28form._%28%28lib._typed-racket%2Fbase-env%2Fbase-types-extra..rkt%29._.Rec%29%29][Rec]] in Racket Reference
+- [[https://docs.racket-lang.org/ts-reference/special-forms.html#%28form._%28%28lib._typed%2Fracket%2Fbase..rkt%29._define-type%29%29][define-type]] in Racket Reference
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Structure_.Types%29][4.6 Structure Types]]
+
+Using struct introduces new types, distinct from any previous type.
+
+- =(struct point ([x : Real] [y : Real]))=
+
+Instances of this structure, such as (point 7 12), have type point.
+
+If a struct supertype is provided, then the newly defined type is a subtype of
+the parent.
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Types_for_.Structure_.Type_.Properties%29][4.7 Types for Structure Type Properties]]
+
+Complicated things I don't understand!!!
+- I think it's for when a structure is coming from regular Racket
+- using [[https://docs.racket-lang.org/reference/structprops.html#%28def._%28%28quote._~23~25kernel%29._make-struct-type-property%29%29][make-struct-type-property]]
+- I don't fully understand structures in regular Racket!!!
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Subtyping%29][4.8 Subtyping]]
+
+All types are placed in a hierarchy
+- based on what values are included in the type
+When an element of a larger type is expected
+- an element of a smaller type may be provided
+- the smaller type is called a subtype of the larger type
+- the larger type is called a supertype
+
+Example: Integer is a subtype of Real
+#+begin_src racket
+  (: f (-> Real Real))
+  (define (f x) (* x 0.75))
+
+  (: x Integer)
+  (define x -125)
+
+  (f x)
+#+end_src
+
+All types are subtypes of the Any type.
+
+The elements of a union type are individually subtypes of the whole union
+- Example: String is a subtype of (U String Number)
+
+One function type is a subtype of another, if
+- they have the same number of arguments
+- the subtype’s arguments are more permissive (is a supertype)
+- the subtype’s result type is less permissive (is a subtype)
+Example: =(-> Any String)= is a subtype of =(-> Number (U String #f))=
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Polymorphism%29][4.9 Polymorphism]]
+
+**** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Type_.Constructors%29][4.9.1 Type Constructors]]
+
+Note that /types/ and /type constructors/ are different!!
+- =Listof= is a /type constructor/
+- =Number= is a /type/
+
+**** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Polymorphic_.Data_.Structures%29][4.9.2 Polymorphic Data Structures]]
+
+Using the builtin /type constructor/ =Listof=
+#+begin_src racket
+#lang typed/racket
+(: sum-list (-> (Listof Number) Number))
+(define (sum-list l)
+  (cond [(null? l) 0]
+        [else (+ (car l) (sum-list (cdr l)))]))
+#+end_src
+
+Creating our own type constructors
+#+begin_src racket
+#lang typed/racket
+(struct Nothing ()) ; a structure type Nothing
+(struct (A) Just ([v : A])) ; a type constructor Just
+
+(define-type (Maybe A) (U Nothing (Just A))) ; a type constructor Maybe
+
+(: find (-> Number (Listof Number) (Maybe Number)))
+(define (find v l)
+  (cond [(null? l) (Nothing)]
+        [(= v (car l)) (Just v)]
+        [else (find v (cdr l))]))
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Polymorphic_.Functions%29][4.9.3 Polymorphic Functions]]
+
+#+begin_src racket
+#lang typed/racket
+(: list-length (All (A) (-> (Listof A) Integer)))
+(define (list-length l)
+  (if (null? l)
+      0
+      (add1 (list-length (cdr l)))))
+#+end_src
+
+The new type constructor =All= /(for all)/ takes
+- a list of type variables
+- a body type
+The type variables are allowed to appear free in the body of the =All= form.
+
+**** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Lexically_.Scoped_.Type_.Variables%29][4.9.4 Lexically Scoped Type Variables]]
+
+Type variables are lexically scoped
+- bound in the body of the annotated definition
+
+Two different type variables named =a=.
+- Don't do this deliberately!
+#+begin_src racket
+(: my-id (All (a) (-> a a)))
+(define my-id
+  (lambda ([x : a])  ; x is of the outer scope's type a
+    (: helper (All (a) (-> a a))) ; helper's type a
+    (define helper
+      (lambda ([y : a]) y) )      ; helper's type a
+    (helper x) )     ; x is of the outer scope's type a
+#+end_src
+
+*** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._varargs%29][4.10 Variable-Arity Functions: Programming with Rest Arguments]]
+
+Typed Racket can handle /some/ uses of rest arguments.
+
+**** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Uniform_.Variable-.Arity_.Functions%29][4.10.1 Uniform Variable-Arity Functions]]
+
+#+begin_src racket
+#lang typed/racket
+(: sum (-> Number * Number))
+(define (sum . xs)
+  (if (null? xs)
+      0
+      (+ (car xs) (apply sum (cdr xs)))))
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/types.html#%28part._.Non-.Uniform_.Variable-.Arity_.Functions%29][4.10.2 Non-Uniform Variable-Arity Functions]]
+
+#+begin_src racket
+#lang typed/racket
+(: fold-left
+   (All (C A B ...)
+        (-> (-> C A B ... B C) C (Listof A) (Listof B) ... B
+            C)))
+(define (fold-left f i as . bss)
+  (if (or (null? as)
+          (ormap null? bss))
+      i
+      (apply fold-left
+             f
+             (apply f i (car as) (map car bss))
+             (cdr as)
+             (map cdr bss))))
+#+end_src
+
+The type of
+- =(inst fold-left Integer Boolean String Number)=
+is
+- =(-> (-> Integer Boolean String Number Integer) Integer (Listof Boolean)
+  (Listof String) (Listof Number) Integer)=
+
+where [[https://docs.racket-lang.org/ts-reference/special-forms.html#%28form._%28%28lib._typed-racket%2Fbase-env%2Fprims..rkt%29._inst%29%29][inst]] instantiates =fold-left= with the specified types.
+
+*** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html][5 Occurrence Typing]]
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._.Basic_.Occurrence_.Typing%29][5.1 Basic Occurrence Typing]]
+
+If Typed Racket can determine the type a variable must have based on a predicate
+check in a conditional expression, it can narrow the type of the variable within
+the appropriate branch of the conditional.
+
+#+begin_src racket
+#lang typed/racket
+(: flexible-length (-> (U String (Listof Any)) Integer))
+(define (flexible-length str-or-lst)
+  (if (string? str-or-lst)
+      (string-length str-or-lst)
+      (length str-or-lst)))
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._propositions-and-predicates%29][5.2 Propositions and Predicates]]
+
+Predicates for built-in types are annotated with propositions that
+allow the type system to reason logically about predicate checks.
+
+#+begin_src racket repl
+> string?
+- : (-> Any Boolean : String)
+#<procedure:string?>
+#+end_src
+
+The =: String= part means
+- if the predicate succeeds, the result is =String=
+- otherwise it is NOT =String=
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._.Specifying_.Propositions%29][5.2.1 Specifying Propositions]]
+
+Our predicates will need similar annotation
+#+begin_src racket
+#lang typed/racket
+;; Given:
+(: listof-string? (-> (Listof Any) Boolean : (Listof String)))
+(define (listof-string? lst)
+  (andmap string? lst))
+;; This will typecheck:
+(: main (-> (Listof Any) String))
+(define (main lst)
+  (cond
+    [(listof-string? lst) (first lst)]
+    [else "not a list of strings"]))
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._.One-sided_.Propositions%29][5.2.2 One-sided Propositions]]
+
+There are special declarations for propositions which only tell you the type
+when they succeed, or only tell you the type when they fail.
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._.Other_conditionals_and_assertions%29][5.3 Other conditionals and assertions]]
+
+You can help the type checker with an assertion, e.g.
+- =(- b a)= where b and a are both =Positive-Integer= returns an =Integer=
+#+begin_src racket
+#lang typed/racket
+(: a Positive-Integer)
+(define a 15)
+(: b Positive-Integer)
+(define a 20)
+(: c Integer) ;; Can't be Positive-Integer
+(define c (- b a))
+#+end_src
+
+#+begin_src racket
+#lang typed/racket
+(: a Positive-Integer)
+(define a 15)
+(: b Positive-Integer)
+(define a 20)
+(: d Positive-Integer)
+(define d (assert (- b a) positive?))
+#+end_src
+
+The type checker knows that =assert= will make a runtime check and can then
+trust that =d= will be a =Postive-Integer=.
+
+The type checker is actually looking at this after macro expansion, i.e.
+#+begin_src racket
+#lang typed/racket
+(: e Positive-Integer)
+(define e (let ( [diff (- b a)] )
+            (if (positive? diff)
+                diff
+                (error "Assertion failed") ) ))
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._.A_caveat_about_set_%29][5.4 A caveat about set!]]
+
+"If a variable is ever mutated with set! in the scope in which it is defined,
+Typed Racket cannot use occurrence typing with that variable."
+
+"See [[https://docs.racket-lang.org/guide/set_.html#%28part._using-set%21%29][4.9.1 Guidelines for Using Assignment]] in the Racket Guide"
+- "Racket style generally discourages the use of set!."
+- "All else being equal, a program that uses no assignments or mutation is
+  always preferable to one that uses assignments or mutation. While side effects
+  are to be avoided, however, they should be used if the resulting code is
+  significantly more readable or if it implements a significantly better
+  algorithm."
+- "The use of mutable values, such as vectors and hash tables, raises fewer
+  suspicions about the style of a program than using set! directly.
+  Nevertheless, simply replacing set!s in a program with vector-set!s obviously
+  does not improve the style of the program."
+
+"The types of top-level variables in the REPL cannot be refined by Typed Racket."
+
+Why would these caveats exist if I've declared a type for the variable??
+
+#+begin_src racket
+#lang typed/racket
+(: foo String)
+(define foo "Hello!")
+(set! foo "Goodbye!")
+(displayln foo)
+#+end_src
+
+#+RESULTS:
+: Goodbye!
+
+I notice, btw, that I can't use set! on a top-level binding from the REPL in
+Typed Racket if I haven't already done a set! in the definition window!
+
+#+begin_src racket repl
+  > (set! foo "Hello again!")
+X foo: cannot modify a constant
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._.Access_to_structure_fields%29][5.5 Access to structure fields]]
+
+Occurrence typing can work with accessors to immutable structure fields.
+- Yeah, so??
+
+#+begin_src racket
+#lang typed/racket
+(struct apple ([a : Any]))
+(struct (A) fruit ([a : A]))
+
+(define (f [obj : Any]) : Number
+  (cond
+    [(and (apple? obj) (number? (apple-a obj))) (apple-a obj)]
+    [(and (fruit? obj) (number? (fruit-a obj))) (fruit-a obj)]
+    [else 42]))
+;; Hmm, how do I use these?
+(define apple-count (apple 1.5))
+(define grape-count (fruit 20))
+(define avocado-count (fruit 1/2))
+(displayln (f apple-count))
+(displayln (f grape-count))
+(displayln (f avocado-count))
+(displayln (f 'hello))
+(: fruit-count (fruit Integer))
+(: fruit-amount (fruit Real))
+#;(define fruit-count avocado-count) ;; rejected by type checker
+(define fruit-count grape-count)
+(define fruit-amount avocado-count)
+#+end_src
+
+#+RESULTS:
+: 1.5
+: 20
+: 1/2
+: 42
+
+#+begin_src racket repl
+> apple-count
+- : apple
+#<apple>
+> (apple-a apple-count)
+- : Any
+10
+> grape-count
+- : (fruit Positive-Byte)
+#<fruit>
+> avocado-count
+- : (fruit Positive-Exact-Rational)
+#<fruit>
+#+end_src
+
+**** [[https://docs.racket-lang.org/ts-guide/occurrence-typing.html#%28part._let-aliasing%29][5.6 let and match aliasing]]
+
+When variables alias other variables w/o mutation
+- their types unify
+- e.g. in =let= and =match= forms
+      - =match= forms expand to =let= forms!
+Occurrance typing therefore works as desired.
+
+** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html][6 Typed-Untyped Interaction]]
+
+Use a regular =require= to import from another typed module or library.
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._untyped-in-typed%29][6.1 Using Untyped Code in Typed Code]]
+
+file distance.rkt
+#+begin_src racket
+#lang racket
+
+(provide (struct-out pt)
+         distance)
+
+(struct pt (x y))
+
+; distance : pt pt -> real
+(define (distance p1 p2)
+  (sqrt (+ (sqr (- (pt-x p2) (pt-x p1)))
+           (sqr (- (pt-y p2) (pt-y p1))))))
+#+end_src
+
+import from a file
+#+begin_src racket
+#lang typed/racket
+
+(require/typed "distance.rkt"
+               [#:struct pt ([x : Real] [y : Real])]
+               [distance (-> pt pt Real)])
+
+(distance (pt 3 5) (pt 7 0))
+#+end_src
+
+import from a library
+#+begin_src racket
+#lang typed/racket
+
+(require/typed racket/base [add1 (-> Integer Integer)])
+#+end_src
+
+So:
+- Is Typed Racket wrapping these things with dynamic checking code?
+- If so, is there a dynamic checking function created for each type???
+      - ==> experiment and find out!!!
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._.Opaque_.Types%29][6.1.1 Opaque Types]]
+
+file distance2.rkt
+#+begin_src racket
+#lang racket
+
+(provide point?
+         distance)
+
+; A Point is a (cons real real)
+(define (point? x)
+  (and (pair? x)
+       (real? (car x))
+       (real? (cdr x))))
+
+; distance : Point Point -> real
+(define (distance p1 p2)
+  (sqrt (+ (sqr (- (car p2) (car p1)))
+           (sqr (- (cdr p2) (cdr p1))))))
+#+end_src
+
+#+begin_src racket
+#lang typed/racket
+
+(require/typed "distance2.rkt"
+               [#:opaque Point point?]
+               [distance (-> Point Point Real)])
+
+(define p0 : Point (assert (cons 3 5) point?))
+(define p1 : Point (assert (cons 7 0) point?))
+(distance p0 p1)
+#+end_src
+
+We've designated a /dynamic predicate/ for the /type/ of a value of unknown
+(opaque) representation.  I guess we can type any constructors or accessors
+as well, but Typed Racket won't think of them as such.
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._typed-in-untyped%29][6.2 Using Typed Code in Untyped Code]]
+
+Simply works, /except/
+- macros defined in typed modules may not be used in untyped modules!
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._protecting-interaction%29][6.3 Protecting Typed-Untyped Interaction]]
+
+Ah ha ha: Now we reveal how we make miscegenation safe!
+
+Typed Racket uses /contracts/ wherever typed and untyped code interacts.
+- /Deep Type Contracts/ are used by default.
+- There are two alternatives if this is too much of a performance hit.
+
+- Deep Types :: use rigorous contract checks
+- Shallow Types :: use lightweight assertions called /shape checks/
+- Optional Types :: eschew safety with no checking!
+
+Deep Type Contracts suport [[https://docs.racket-lang.org/ts-guide/optimization.html][7 Optimization in Typed Racket]].
+
+See [[https://docs.racket-lang.org/guide/contracts.html][7 Contracts]] in the Racket Guide.
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._.Shallow_.Types__.Sound_.Types__.Low-.Cost_.Interactions%29][6.3.2 Shallow Types: Sound Types, Low-Cost Interactions]]!
+
+To use Shallow Types, use the =module= language =typed/racket/shallow=.
+- Study the Caveats!
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._.Optional_.Types__.It_s_.Just_.Racket%29][6.3.3 Optional Types: It’s Just Racket]]
+
+To use Optional Types, use the =module= language =typed/racket/optional=.
+- Huge Caveats!
+
+*** [[https://docs.racket-lang.org/ts-guide/typed-untyped-interaction.html#%28part._.When_to_.Use_.Deep__.Shallow__or_.Optional_%29][6.3.4 When to Use Deep, Shallow, or Optional?]]
+
+Deep types maximize the benefits of
+- static checking
+- type-driven optimizations.
+Use them for
+- tightly-connected groups of typed modules.
+Avoid them when untyped, higher-order values
+- frequently cross boundaries into typed code.
+Expensive boundary types include
+- Vectorof
+- ->
+- Object
+- Hmm,, aren't all composite types expensive??
+
+Shallow types are best for
+- small typed modules that
+- frequently interact with untyped code.
+Shallow shape checks run quickly
+- constant-time for most types
+- linear time (in the size of the type, not the value) for a few exceptions such as
+      - U
+      - case->.
+Avoid Shallow types in
+- large typed modules that
+- frequently call functions or access data structures
+These operations may incur shape checks and their net cost may be significant.
+
+Optional types enable the typechecker and nothing else.
+- I think it's really stupid to use this feature!!!
+
+My bottom two lines:
+- If something in regular Racket is too expensive to fully Type Check
+- Reimplement it in Typed Racket!
+
+** [[HTTPS://docs.racket-lang.org/ts-guide/optimization.html][7 Optimization in Typed Racket]]
+
+You can turn the optimizer off.
+- This can also be done when running a program in a sandbox
+- See [[https://docs.racket-lang.org/reference/Sandboxed_Evaluation.html][14.12 Sandboxed Evaluation]] in the Racket Reference
+
+See the [[https://docs.racket-lang.org/optimization-coach/index.html][Optimization Coach]] for advice to help Racket run fast!
+
+Use the most specific types possible, e.g.
+- =Float= vs. =Real= vs. =Number=
+- =Float-Complex= vs. =Complex=
+- Floating-point literals rather than exact literals.
+- float complex literals (e.g. 1.0+1.0i) vs. complex literals (e.g. 1+1i)
+- favor rectangular coordinates over polar coordinates.
+- Avoid mixing these types
+
+Use known-length constructors for Lists and Vectors when the length is known.
+
+Typed Racket provides types for most of the bindings provided by #lang racket;
+using require/typed is unnecessary in [most of] these cases.
+
+You can use the [[https://docs.racket-lang.org/contract-profile][Contract Profiling]] tool if you suspect performance issues with contracts.
+- =raco pkg install contract-profile=
+
+*** [[
+
+
+*** [[
+
+*** [[
+
+
+*** [[
+
+*** [[
+
+
+*** [[
+
+*** [[
+
+
+** [[https://docs.racket-lang.org/ts-guide/caveats.html][8 Caveats and Limitations]]
+
+*** [[
+
+*** [[
+
+
+* [[https://docs.racket-lang.org/ts-reference][The Typed Racket Reference]]

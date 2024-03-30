@@ -1,0 +1,110 @@
+* Racket Guide and Reference Notes
+
+I'll mostly allow /The Racket Guide/ to organize these notes.
+- The Guide provides most of the needed links into the Reference.
+
+* [[https://docs.racket-lang.org/guide][The Racket Guide]]
+
+** [[https://docs.racket-lang.org/guide/intro.html][1 Welcome to Racket]]
+
+** [[https://docs.racket-lang.org/guide/to-scheme.html][2 Racket Essentials]]
+
+** [[https://docs.racket-lang.org/guide/datatypes.html][3 Built-In Datatypes]]
+
+*** [[https://docs.racket-lang.org/guide/vectors.html][3.9 Vectors]]
+
+** [[https://docs.racket-lang.org/guide/scheme-forms.html][4 Expressions and Definitions]]
+** [[https://docs.racket-lang.org/guide/define-struct.html][5 Programmer-Defined Datatypes]]
+
+** [[https://docs.racket-lang.org/guide/modules.html][6 Modules]]
+
+** [[https://docs.racket-lang.org/guide/contracts.html][7 Contracts]]
+
+** [[https://docs.racket-lang.org/guide/i_o.html][8 Input and Output]]
+
+** [[https://docs.racket-lang.org/guide/regexp.html][9 Regular Expressions]]
+
+** [[https://docs.racket-lang.org/guide/control.html][10 Exceptions and Control]]
+
+** [[https://docs.racket-lang.org/guide/for.html][11 Iterations and Comprehensions]]
+
+** [[https://docs.racket-lang.org/guide/match.html][12 Pattern Matching]]
+
+** [[https://docs.racket-lang.org/guide/classes.html][13 Classes and Objects]]
+
+** [[https://docs.racket-lang.org/guide/units.html][14 Units (Components)]]
+
+** [[https://docs.racket-lang.org/guide/reflection.html][15 Reflection and Dynamic Evaluation]]
+
+** [[https://docs.racket-lang.org/guide/macros.html][16 Macros]]
+
+** [[https://docs.racket-lang.org/guide/languages.html][17 Creating Languages]]
+
+** [[https://docs.racket-lang.org/guide/concurrency.html][18 Concurrency and Synchronization]]
+
+** [[https://docs.racket-lang.org/guide/performance.html][19 Performance]]
+
+** [[https://docs.racket-lang.org/guide/concurrency.html][18 Concurrency and Synchronization]]
+*** [[https://docs.racket-lang.org/guide/concurrency.html#%28part._.Threads%29][18.1 Threads]]
+
+*** [[https://docs.racket-lang.org/guide/concurrency.html#%28part._.Semaphores%29][18.3 Semaphores]]
+
+*** [[https://docs.racket-lang.org/guide/concurrency.html#%28part._.Channels%29][18.4 Channels]]
+
+** [[https://docs.racket-lang.org/guide/parallelism.html][20 Parallelism]]
+
+** [[https://docs.racket-lang.org/guide/running.html][21 Running and Creating Executables]]
+
+** [[https://docs.racket-lang.org/guide/More_Libraries.html][22 More Libraries]]
+
+** [[https://docs.racket-lang.org/guide/dialects.html][23 Dialects of Racket and Scheme]]
+
+*** [[https://docs.racket-lang.org/guide/more-hash-lang.html][23.1 More Rackets]]
+
+- [[https://docs.racket-lang.org/ts-guide][typed/racket]] :: like racket, but statically typed; see the Typed Racket Guide
+  documentation.
+- [[https://docs.racket-lang.org/lazy][lazy]] :: like racket/base, but avoids evaluating an expression until its value
+  is needed; see the Lazy Racket documentation.
+- [[https://docs.racket-lang.org/frtime][frtime]] :: changes evaluation in an even more radical way to support reactive
+  programming; see the FrTime documentation.
+- [[https://docs.racket-lang.org/scribble/base.html][scribble/base]] :: a language, which looks more like Latex than Racket, for
+  writing documentation; see Scribble: The Racket Documentation Tool
+
+*** [[https://docs.racket-lang.org/guide/standards.html][23.2 Standards]]
+
+What dialect is created by =#lang scheme=?
+
+**** [[https://docs.racket-lang.org/guide/standards.html#%28part._r5rs%29][23.2.1 R5RS]]
+
+[[https://docs.racket-lang.org/r5rs/r5rs-std][Revised5 Report on the Algorithmic Language Scheme]]
+- #lang r5rs
+- syntactic forms and functions of R5RS differ from Racket
+- R6RS pairs are mutable pairs
+
+[[https://docs.racket-lang.org/r5rs][R5RS: Legacy Scheme]] -- main Racket R5RS documentation
+- [[https://docs.racket-lang.org/r5rs/running.html][1 Running R5RS Programs]]
+- [[https://docs.racket-lang.org/r5rs/plt-r5rs.html][2 plt-r5rs]]
+- [[https://docs.racket-lang.org/r5rs/r5rs-mod.html][3 R5RS Module Language]]
+- [[https://docs.racket-lang.org/r5rs/r5rs_init-mod.html][4 R5RS Initialization Library]]
+
+**** [[https://docs.racket-lang.org/guide/standards.html#%28part._.R6.R.S%29][23.2.2 R6RS]]
+
+[[https://docs.racket-lang.org/r6rs/r6rs-std][Revised6 Report on the Algorithmic Language Scheme]]
+- #!r6rs :: valid R6RS syntax
+- #! :: Racket shorthand for #lang followed by a space!
+- syntactic forms and functions of R6RS differ from Racket
+- R6RS pairs are mutable pairs
+
+[[https://docs.racket-lang.org/r6rs][R6RS: Scheme]] -- main Racket R6RS documentation
+
+** [[https://docs.racket-lang.org/guide/other-editors.html][24 Command-Line Tools and Your Editor of Choice]]
+
+*** [[https://docs.racket-lang.org/guide/cmdline-tools.html][24.1 Command-Line Tools]]
+
+*** [[https://docs.racket-lang.org/guide/Emacs.html][24.2 Emacs]]
+
+*** [[https://docs.racket-lang.org/guide/Visual_Studio_Code.html][24.5 Visual Studio Code]]
+
+- [[https://marketplace.visualstudio.com/items?itemName=evzen-wybitul.magic-racket][Magic Racket]]
+
+* [[https://docs.racket-lang.org/reference][The Racket Reference]]

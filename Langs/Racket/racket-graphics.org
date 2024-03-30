@@ -1,0 +1,74 @@
+* Racket Graphics Notes
+
+** Questions
+
+How can Racket represent Graphical Objects?
+- Bitmaps
+      - supposedly only when loading an existing bitmap file
+      - or explicitly rendering such
+- SVG or other Functional Representations?
+- Postscript-like operation sequences?
+- Constraint-based Functional Objects?
+
+More Packages
+- 
+- [[https://pkgs.racket-lang.org/package/pict3d][Pict3D]]
+      - failing as of [2023-11-24 Fri 00:52]
+      - issue posted Nov 2022
+- [[https://pkgs.racket-lang.org/package/metapict][Metapict]]
+
+What rendering libraries does Racket use?
+- Can everything use Cairo?
+- GPU-based rendering?
+
+What's with the snip% representation?
+
+** Impressions
+
+Racket has many different kinds of Graphical Objects.
+- These objects are instances of %snip classes?
+- There is a convert protocol for converting among them
+
+Conversions seem to be mostly for creating files?
+
+Graphical Objects are a tree of operations with primitives as leaves.
+If the leaves are the result of image constructors then the whole
+tree is declarative?
+
+** Graphical Objects
+
+The 2 current standard functional picture libraries
+- [[https://docs.racket-lang.org/pict][pict]]
+      - [[https://docs.racket-lang.org/pict/Pict_Datatype.html][pict datatype]]
+- 2htdp/image teachpack
+      - [[https://download.racket-lang.org/releases/8.11/doc/teachpack/2htdpimage-guide.html][Image Guide]]
+      - [[https://download.racket-lang.org/releases/8.11/doc/teachpack/2htdpimage.html][2httpd/image teachpack]]
+
+How are these different?
+- How and when can we convert between them?
+- pict-convert failed on PLANE
+      - PLANE was a loaded bitmap
+      - Maybe only works for constructed images?
+
+We've got
+- 2D Picts
+- 2htdp 2D Images
+- file:///usr/share/doc/racket/teachpack/2htdpimage-guide.html
+- file:///usr/share/doc/racket/teachpack/2htdpimage.html
+- 3D Picts
+- Metapict
+
+- [[https://docs.racket-lang.org/sgl/][GL: 3-D Graphics with OpenGL or GLU]]
+
+
+[[https://docs.racket-lang.org/draw][Drawing Toolkit]]
+- [[https://docs.racket-lang.org/draw/svg-dc_.html][svg class]]
+      - Seems to be only for creating files
+
+[[https://docs.racket-lang.org/gui][Graphical Interface Toolkit]]
+- may have / explain key gui features
+
+Internal Formats for Graphical Objects
+- Bitmap
+- Postscript-like operations?
+      - maybe for operators
