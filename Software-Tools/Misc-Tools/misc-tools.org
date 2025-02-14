@@ -1,0 +1,12 @@
+* Misc Software Tools
+
+** Rust Renaissance Tools
+
+- ripgrep aka rg ::
+- fdfind aka fd ::
+
+** Document Transformation Tools
+
+- pandoc
+
+** Relational Operations for Textfiles

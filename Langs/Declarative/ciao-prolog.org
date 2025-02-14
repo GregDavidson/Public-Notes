@@ -1,0 +1,20 @@
+* Ciao Prolog
+
+- [[https://ciao-lang.org/][Ciao Prolog Official Website]]]
+- [[https://ciao-lang.org/playground][Online Playground]]
+
+Ciao has many modern extensions
+- constraint logic programming
+- multiparadigm programming
+- meta-programming
+      - higher-order
+      - concurrency
+      - functions
+      - tabling
+      - search control
+      - and more!
+- user packages
+- syntactic and semantic language extensions
+- interface with foreign code
+- modules and bundles for large scale development
+- assertions for unified static and dynamic verification

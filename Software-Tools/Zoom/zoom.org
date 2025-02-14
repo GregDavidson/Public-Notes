@@ -1,0 +1,19 @@
+* Zoom Notes
+
+[[file:communications-zoom.org]]
+[[file:zoom-meet-burning.org]]
+[[file:zoom-meet-limitless.org]]
+[[file:zoom-meet-personal.org]]
+
+** Problems Resolved
+
+The issue of the post-game popup of the chat
+was resolved.  It was an incorrect setting in
+my Mint Mate which was calling a document browser
+instead of Caja.
+
+** Package Install
+
+The Zoom package requires installation of
+ibus
+libxcb-xtest0

@@ -1,0 +1,389 @@
+* Firefox CSS
+
+Mofifying 
+
+
+** https://superuser.com/questions/1424478/can-i-hide-native-tabs-at-the-top-of-firefox
+
+
+Re-enable Custom CSS
+-    Visit about:config
+-    Search toolkit.legacyUserProfileCustomizations.stylesheets
+-    Toggle it, making the value true
+
+Create userChrome.css
+
+    Visit about:support
+    To the right of "Profile Folder", press the button Open Directory
+    Create a new folder named chrome
+    Open the chrome folder and create a new file named userChrome.css
+
+#+begin_src css
+  /* hides the native tabs */
+#TabsToolbar {
+  visibility: collapse;
+}
+#+end_src
+
+#+begin_src css
+  /* hides the title bar */
+#titlebar {
+  visibility: collapse;
+}
+
+/* hides the sidebar */
+#sidebar-header {
+  visibility: collapse !important;
+} 
+#+end_src
+
+#+begin_src css
+  /* hides the native tabs */
+#TabsToolbar {
+  visibility: collapse;
+}
+/* leaves space for the window buttons */
+#nav-bar {
+    margin-top: -8px;
+    margin-right: 74px;
+    margin-bottom: -4px;
+}
+#+end_src
+
+#+begin_src css
+  /* Option 1 */
+#TabsToolbar {
+    opacity: 0.0;
+}
+
+#TabsToolbar:hover {
+    opacity: 1.0;
+}
+
+/* Option 2 */
+#TabsToolbar {
+    visibility: collapse;
+}
+
+#navigator-toolbox:hover #TabsToolbar {
+    visibility: visible;
+}
+#+end_src
+
+
+** https://www.reddit.com/r/firefox/comments/1bpb58c/tree_style_tabs_customization/
+
+
+ I'm using 2 CSS files--one for my Firefox, and a TreeTabStyles.css which I
+ upload into my settings.
+
+*** Firefox CSS
+
+#+begin_src css
+  /*
+ *    Hide Tabs on Topbar
+ */
+#TabsToolbar {
+    visibility: collapse;
+}
+
+#titlebar {
+    visibility: collapse;
+}
+
+/*
+ *   NOTE: If you hide the sidebar header it can get tricky to switch between diffrent addons sidebars.
+*/
+#sidebar-header {
+    visibility: collapse !important;
+} 
+
+
+
+/* 
+Firefox `userChrome.css` for Tree Style Tab
+  
+  * Auto-sliding draw for TST
+  * Leaves 'pinned' and 'active' tabs visible in standard browser chrome
+  * Leaves 'last-active' tabs visible for 3 minutes after becoming inactive
+  * Where an active tab is pinned, leaves 'last-active' tab (x1) visible for 1hr
+
+  Instructions:
+    1. Choose: (Hamburger menu) -> 'Customize'
+      - Switch 'Title bar': off
+      - also 'Drag space': off
+    2. Browse to URL "about:config"
+      - set `toolkit.legacyUserProfileCustomizations.stylesheets`: true
+    3. Browse to URL "about:profiles"
+      - Select 'Profile in use' -> 'Root Directory' -> 'Show in Finder' (Mac)
+      - Save this file under `chrome/userChrome.css`
+      - restart the browser
+    4. Install Tree Style Tab
+    5. Browse to URL: "about:addons"
+      - Select 'Tree Style Tab' -> 'Preferences' tab -> 'Extra style rules for sidebar contents'
+      - paste in content from `tree-style-tabs-theme.css`
+ */
+
+
+
+/* where active tab is pinned, delays hiding of 'last-active' inactive tab for 1hr */
+.tabbrowser-tab[pinned][selected] ~ .tabbrowser-tab:not([pinned]) {
+  transition-duration: 0s !important;
+  transition-property: width, visibility, min-width, -moz-box-flex !important;
+  transition-delay: 3600s !important; /* = 1hr, adjust seconds to increase / decrease visibility */
+}
+
+/* hides all non-active tabs */
+.tabbrowser-tab:not([pinned]):not([selected]) {
+  visibility: hidden;
+  overflow: hidden;
+  min-width: 100px !important;
+  -moz-box-flex: 0 !important;
+}
+
+/* waits 60 seconds before hiding inactive tabs */
+.tabbrowser-tab:not([pinned]) {
+  min-width: 0 !important;
+  transition-property: width, visibility !important;
+  transition-duration: 0.4s !important; /* slide shut */
+  transition-delay: 180s !important; /* wait X seconds before hiding inactive tabs | 0 = immediate */
+}
+
+/* shows active tabs immediately */
+.tabbrowser-tab[selected]:not([pinned]) {
+  min-width: var(--tab-min-width) !important;
+  width: var(--tab-min-width) !important;
+  transition-duration: 0s !important; /* = immediate */
+  transition-delay: 0s !important; /* = immediate */
+}
+
+/* Sidebar sliding auto-reveal */
+
+/* Sidebar min and max width removal */
+#sidebar {
+  max-width: none !important;
+  min-width: 100px !important;
+}
+
+/* Hide splitter */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] + #sidebar-splitter {
+  display: none !important;
+}
+/* Hide sidebar header */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+  visibility: collapse;
+}
+
+/* Shrink sidebar until hovered */
+:root {
+  --thin-tab-width: 30px;
+  --wide-tab-width: 300px;
+}
+#sidebar-box:not([sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]) {
+  min-width: var(--wide-tab-width) !important;
+  max-width: none !important;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
+  overflow: hidden !important;
+  position: relative !important;
+  transition: all 300ms !important;
+  /*transition: all 0ms 0s !important;*/
+  min-width: var(--thin-tab-width) !important;
+  max-width: var(--thin-tab-width) !important;
+  z-index: 2;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover,
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar {
+  /*transition-delay: 0s !important;*/
+  transition: all 300ms !important;
+  min-width: var(--wide-tab-width) !important;
+  max-width: var(--wide-tab-width) !important;
+  z-index: 1;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover {
+  margin-right: calc((var(--wide-tab-width) - var(--thin-tab-width)) * -1) !important;
+}
+#+end_src
+
+
+***  TreeTabStyles.css
+
+#+begin_src css
+
+/*   Show title of unread tabs with red and italic font */
+
+  root.sidebar tab-item.unread .label-content {
+    color red !important;
+    font-style italic !important;
+  }
+
+
+/*   Add private browsing indicator per tab  */
+
+  root.sidebar tab-item.private-browsing tab-labelbefore {
+    content 🕶;
+  }
+
+
+
+
+ Hide border on tab bar, force its state to 'scroll', adjust margin-left for width of scrollbar. 
+#tabbar {
+  border 0;
+  scrollbar-width none;
+  overflow scroll !important;
+  margin-top  0 !important;
+}
+
+ Include 'reveal' animation ... stagers by level 
+#tabbar .tab {
+  transition 0.1s margin-top, 0.2s 0.1s margin-left, 0.2s 0.1s visibility;
+}
+
+ delay transitions on open 
+#tabbarnot(hover) .tab {
+  transition-delay 1s;
+  margin-left 0;
+}
+
+ animate twisty reveal 
+#tabbar .tab .twisty {
+  transition 0.2s margin;
+}
+
+ general tabs 
+.tab {
+  background-color transparent;
+}
+.tab,
+.tab.pinned {
+  height 2.8em;
+}
+
+ Push tab labels slightly to the right so they're completely hidden in collapsed state, but still look fine while expanded. 
+.tab .label {
+  margin-left 25em;
+}
+
+ fix closebox 
+.tab .closebox {
+  margin-left  0;
+}
+
+.tab .counter {
+  margin-left  auto;
+  display inline-block !important;
+}
+
+ Hide .twisty and adjust margins so favicons have 7px on left. 
+#tabbarnot(hover) .tab .twisty {
+  visibility hidden;
+  margin-left -100px;
+  transition-delay 1s;
+}
+
+
+
+
+ Hide sound playingmuted button. 
+.sound-button {
+  margin-left 0;
+  display inline-block;
+  visibility collapse;
+}
+
+.tab.audible .sound-button {
+  visibility visible;
+  margin-left 0.25em;
+}
+
+.tabnot([data-child-ids]) .counter {
+   visibility hidden; 
+}
+
+tab-itemnot(.subtree-collapsed) .counter {
+  visibility hidden;
+} 
+
+ Hide 'new tab' button. 
+.newtab-button {
+  display none;
+}
+
+ active tab 
+.tab.active {
+  background-color rgba(255, 255, 255, 0.05) !important;
+  box-shadow  inset 3px 0 0 #ffffff99 !important;
+}
+.tabhover,
+.tab.activehover {
+  background-color inherit;
+}
+.tab.active .label {
+  font-weight bold;
+  color #f4f4f4 !important;
+}
+.tab .label,
+.tab.active .label {
+  border-bottom  1px solid transparent;
+}
+.tabhover .label,
+.tab.activehover .label {
+  border-bottom  1px dotted;
+  min-width  0 !important;
+  flex-shrink  1 !important;
+  flex-grow  unset !important;
+}
+
+ pending  unloaded tabs 
+.tab.discarded {
+  background-color #1d1d1d;
+}
+.tab.discarded .label {
+  color #efefefCC !important;
+}
+.tab.discardedhover .label {
+  color #efefef !important;
+}
+
+ Adjust style for tab that has sound playing. 
+.tab.sound-playing .faviconafter,
+.tab.muted .faviconafter {
+  content '🔊';
+  z-index var(--favicon-base-z-index);
+  position absolute;
+  font-size 0.5em;
+  bottom -0.35em;
+  right -0.7em;
+}
+
+ Adjust style for tab that is muted. 
+.tab.muted .faviconafter {
+  content '🔇';
+}
+
+ Pinned tabs 
+ Hide all non-active pinned tabs (these are included in top-bar instead) 
+.tab.pinned {
+  position relative;
+  max-width none;
+  width auto;
+  top 0 !important;
+  left 0 !important;
+}
+.tab.pinnednot(.active) {
+  display none;
+}
+.tab.pinned .label {
+  display block;
+}
+.tab.pinned .sound-button {
+  position relative;
+  transform none;
+}
+.tab.pinned .twisty {
+  display block;
+  min-width none;
+  width auto;
+}
+#+end_src

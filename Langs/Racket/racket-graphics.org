@@ -11,7 +11,6 @@ How can Racket represent Graphical Objects?
 - Constraint-based Functional Objects?
 
 More Packages
-- 
 - [[https://pkgs.racket-lang.org/package/pict3d][Pict3D]]
       - failing as of [2023-11-24 Fri 00:52]
       - issue posted Nov 2022

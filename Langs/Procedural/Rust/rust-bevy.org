@@ -1,0 +1,21 @@
+* Rust Bevy Game Engine
+
+** Missing Packages on Linux Mint
+| missing file | package        |
+|--------------+----------------|
+| also.pc      | libasound2-dev |
+| libudev.pc   | libudev-dev    |
+
+** Examples
+
+#+begin_src sh
+    cd ~/Data/Gits-Theirs/bevy
+    # example 2d game
+    cargo run --example breakout
+    # example 3d game
+    cargo run --example alien_cake_addict
+    # rotating 3d objects
+    cargo run --example 3d_gizmos
+    # animated 3d objects with shadow and transparency effects
+    cargo run --example transparency_3d
+#+end_src

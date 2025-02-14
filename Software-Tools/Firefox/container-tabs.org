@@ -1,0 +1,212 @@
+* Firefox Container Tabs
+
+** https://github.com/mozilla/multi-account-containers/issues/1208
+
+
+Manuallly move / reorder / sort containers list (not tabs) in Multi Account Containers add-on #1208
+
+tienkietboi opened this issue May 8, 2018 · 16 comments
+
+For who want to move / re-order / sort containers (not tabs) like me, which the
+way I'm really want to sort this for my job purpose. As I seen in topic #1199
+#1099 #1077 #979 #895 #657 #405 #330, @falolaf alrd tell us the way to make it
+by: "Not very convenient but you can manually rearrange the containers in the
+containers.json in your profile folder. Close FF before changing that file
+though!" in topic #1199.
+
+I'm not a coder, but can follow his way to make amazing change. This is my first
+post on Github for anyone want to do it! Thanks again to @falolaf.
+
+1. Close your Firefox
+2. Open My Computer, find "containers.json" (for anyone not know how to open like me)
+3. The location is the same with:
+C:\Users\Admin\AppData\Roaming\Mozilla\Firefox\Profiles\qbb0olko.default
+4. It's a long long row code, it will be difficult to sort for whom not know code. Now, make it easy by press Enter one by one like this: {"userContextId":9,"public":true,"icon":"chill","color":"red","name":"Container 1"},
+
+Press Enter after comma }, as my sample code below:
+
+{"version":3,"lastUserContextId":31,"identities":[
+{"userContextId":9,"public":true,"icon":"chill","color":"red","name":"Container 1"},
+{"userContextId":1,"public":true,"icon":"fingerprint","color":"red","name":"Container 2"},
+{"userContextId":11,"public":true,"icon":"cart","color":"red","name":"Container 3"}
+]} 
+
+Ok sort it by your way and then Save it, and open Firefox to see this change!
+
+P/s to Dev Team: Plz make it sortable on frond-end by Title, Drag-Drop by Purpose, ... Waiting for your next update, great job to your team! Thanks for this amazing add-on.
+@tienkietboi tienkietboi changed the title Move / Reorder / Sort containers list (not tabs) in Multi Account Containers add-on Manuallly move / Reorder / Sort containers list (not tabs) in Multi Account Containers add-on May 8, 2018
+@tienkietboi tienkietboi changed the title Manuallly move / Reorder / Sort containers list (not tabs) in Multi Account Containers add-on Manuallly move / reorder / sort containers list (not tabs) in Multi Account Containers add-on May 8, 2018
+@doctopus
+doctopus commented Jul 14, 2018
+
+You could access the profile folder by typing about:profiles in the address bar and click show in finder.
+@tienkietboi
+Author
+tienkietboi commented Nov 4, 2018 •
+
+    You could access the profile folder by typing about:profiles in the address bar and click show in finder.
+
+I've left Firefox but thanks for advice, hope this helpful for everyone! 👯
+@DanHarkless
+DanHarkless commented Feb 25, 2019 •
+
+Yes, the lack of the ability to manually or alphabetically sort the containers in the UI has been a great source of irritation to me as well. Until such a feature gets added, thanks very much, tienkietboi, for the tip on manually editing the JSON file.
+
+BTW, for anyone undertaking this, please note that you will need to make sure all of your sorted userContextId lines have a comma at the end except for the last one. If you start Firefox without this being the case, then Firefox will not be able to parse the JSON file, and it'll throw away all your user-defined containers, all their cookies, and will go back to the default container set. I'm a programmer, so I was even watching out for this issue, but I screwed up when I decided at the last minute to change my manual sort order and forgot to relocate the stray comma. So be careful.
+
+Also, if you've deleted some of the default containers, you'll still find their lines in the containers.json, but with blanked-out parameters, and '"public":false'. It's a good idea to move all such lines to the bottom of the list, make sure there's no comma on the last one, and then you won't have to worry about comma issues on your custom container lines above.
+@kevinblumenfeld
+kevinblumenfeld commented Mar 1, 2019
+
+THIS IS 100% UNTESTED!!! DON'T USE THIS!!
+I am just seeing if I could spark interest in something more robust.
+Currently, this is just for Windows.
+All feedback welcome.
+
+# Currently orders the Firefox Container menu by color, icon and then by name
+# The line that reads 'Sort-Object -Property color, icon, name' can change that behavior
+# THIS IS NOT TESTED, DO NOT USE THIS ON YOUR COMPUTER!!
+# AGAIN THIS IS COMPLETELY UNTESTED!!
+# I AM NOT RESPONSIBLE IF YOUR FIREFOX OR COMPUTER IS DAMAGED IN ANY WAY!!
+
+Get-Process -ProcessName FireFox -ErrorAction SilentlyContinue |
+    ForEach-Object {
+    $null = $_.closemainwindow()
+}
+
+$index = 0
+do {
+    Start-Sleep -Seconds 2
+    $index++
+    if ($index -gt 30) {
+        Write-Error "Unable to close Firefox - halting"
+        break
+    }
+} while (Get-Process -ProcessName Firefox -ErrorAction SilentlyContinue)
+
+Write-Warning 'Ordering Firefox Containers menu.'
+Write-Warning 'Do not open Firefox until complete...'
+
+$ContainersPath = "$env:APPDATA\Mozilla\Firefox\Profiles"
+Get-ChildItem -Path $ContainersPath -File 'containers.json' -Recurse |
+    ForEach-Object {
+    $Json = Get-Content $_.FullName -Raw |
+        ConvertFrom-Json
+    $Json.identities = $Json.identities |
+        Sort-Object -Property color, icon, name
+    $Json | ConvertTo-Json |
+        Set-Content $_.FullName
+}
+'Ordering complete'
+
+@DanHarkless
+DanHarkless commented Mar 1, 2019
+
+Kevin: Cool stuff. I'll add for people who aren't familiar with it that that's a PowerShell script, and you'd manually run it to sort the containers (i.e. this isn't some code you add to a Firefox file somewhere).
+@kevinblumenfeld
+kevinblumenfeld commented Mar 1, 2019
+
+@DanHarkless thank you! and thank you for clarifying that for others!!
+@ReporterX
+ReporterX commented Apr 9, 2019
+
+This feature is still not implemented after two years. Sigh!
+There is an extension which can display the containers alphabetically. For those who use a lot of containers, this is great.
+https://addons.mozilla.org/en-US/firefox/addon/conex/
+@abawany
+abawany commented Apr 16, 2019
+
+It seems that closing Firefox before editing containers.json is important. I tried it without doing that and then restarted Firefox. While the containers came up in the suggested order, their underlying cookies/local storage remained associated with the old profile.
+@JohnLGalt
+JohnLGalt commented Apr 17, 2019 •
+
+    It seems that closing Firefox before editing containers.json is important. I tried it without doing that and then restarted Firefox. While the containers came up in the suggested order, their underlying cookies/local storage remained associated with the old profile.
+
+That's why step 1 is to close Firefox. :)
+
+I am a bit disappointed that there is not a UI to do this already, but the instructions up there are pretty clear, so I'm going to do this myself.
+
+Having a UI would be better, though....
+
+EDIT: It worked.
+@JohnLGalt
+JohnLGalt commented Apr 27, 2019
+
+Caveat - after reordering, any container that had sites already logged in had to relogin. But every container still works perfectly fine.
+@dailyherold
+dailyherold commented May 9, 2019
+
+For Ubuntu users (possibly other distros), vim /home/$USER/.mozilla/firefox/*.default/containers.json. Not sure if there's a chance of being more than one *.default directory, but for me there was only one, and I was able to edit the containers.json file while Firefox closed and see my desired order upon re-opening. Thanks @tienkietboi for the tip!
+@falolaf falolaf mentioned this issue Jun 13, 2019
+Feature request for moving container position in list #1438
+Closed
+@craymichael
+craymichael commented Aug 7, 2019
+
+Follow up for vim users - easily pretty-print the JSON in-place using the editor command
+
+:$!python -m json.tool
+
+@JohnLGalt
+JohnLGalt commented Aug 13, 2019
+
+    Caveat - after reordering, any container that had sites already logged in had to relogin. But every container still works perfectly fine.
+
+I just realized something - my caveat above only applies if you change the values of the fields (such as userContextId - which I did to try to clean my list up the last time I reordered my list).
+
+If you simply reorder them without changing any values within each entry, the order changes but the logins are not reset.
+@kendallcorner
+Collaborator
+kendallcorner commented Dec 5, 2019
+
+Hi. This looks like a duplicate of #330 . Please vote (:+1:) or discuss on that issue to show your interest. I'll close this, but feel free to reopen if you think it's a different issue.
+@kendallcorner kendallcorner closed this as completed Dec 5, 2019
+@perlancar perlancar mentioned this issue Sep 10, 2020
+Add ability to reorganize Containers #330
+Closed
+@testxsubject
+testxsubject commented May 28, 2023
+
+Is there a way/does editing the json file allow for adding more groups or profiles? It has the 4 options but what if we want to add a couple custom categories like or even do custom titles? Also is there a way to build a Firefox for deployment on a self hosted platform that has this extension added and configured ahead of time? So that there is some pre-defined configuration for what sites and session data goes in which container? Thanks!
+@Kravimir
+Kravimir commented Feb 8, 2024
+
+Thanks for reminding me that Firefox stores lots of profile data in JSON files!
+
+You can use the JsonTools plugin for Notepad++ to "pretty print" (reformat for human readability) to make it much easier to edit. After making your changes, you can also use it to "compress" (remove unnecessary white-space characters), if you want.
+to join this conversation on GitHub. Already have an account? Sign in to comment
+Assignees
+No one assigned
+Labels
+None yet
+Projects
+None yet
+Milestone
+No milestone
+Development
+
+No branches or pull requests
+12 participants
+@dailyherold
+@abawany
+@Kravimir
+@kendallcorner
+@JohnLGalt
+@ReporterX
+@doctopus
+@tienkietboi
+@DanHarkless
+@craymichael
+@kevinblumenfeld
+@testxsubject
+Footer
+© 2024 GitHub, Inc.
+Footer navigation
+
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+    Contact
+

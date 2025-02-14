@@ -1,0 +1,7 @@
+* Software Tools for Healthcare
+
+** GNU Health
+
+- [[https://www.gnuhealth.org][GNUhealth libre digital health ecosystem]]
+- [[https://www.gnu.org/software/gnumed][GNUmed medical records project]]
+- [[https://docs.gnuhealth.org//mygnuhealth][MyGNUHealth libre personal health record]]

@@ -1,0 +1,123 @@
+* Deconstructing Robots
+
+Humans evolved to operate in a world where dynamic agents are other animals and
+the intelligent, most capable (and most dangerous) ones are other humans.
+
+The name "robot" comes from the Czech word for worker. Anyone who employs human
+workers (or soldiers) is interested in the possibility of reliable humanoid
+robots with a level of subservient intelligence sufficient to carry out tasks
+currently requiring human workers.
+
+The amazing Boston Dynamics robots are inspired by 2-legged humans (Atlas) or by
+animal forms (Spot, etc.). But *thinking of robots and automation systems as
+automated humans or animals greatly limits their potential!*
+
+Limiting biases
+- Ideal robots would have a humanoid form.
+- Robots and other machines would have a single body with fixed features
+  (including an embedded brain) like an animal.
+
+Consider instead that *a modern machine is a network of information processing
+units and transducers.*
+- Transducers include sensors
+      - Cameras, laser and radar scanners, temperature, vibration and pressure
+        sensors, etc.
+- as well as effectors
+      - grippers: friction, magnetic and suction grippers, and humanoid hands
+      - mobility: powered wheels, legs, helicopter-like rotors, etc.
+      - every kind of machine tool: drills, saws, water & laser cutters, etc.
+      - specialized and exotic effectors, e.g. 3D-printer extrusion heads
+
+A network device doesn't need to have a
+- fixed composition
+- single location
+
+Instead consider that
+- A mobility platform can sport detachable sensors and robotic arms.
+- Robotic arms can sport detachable sensors and tools.
+
+Each component of a capable modern robotic system would naturally contain its
+own processors interfaced with the its sensors and effectors and the its network
+device(s): wi-fi, cellular, etc.
+
+The Coordinating AI would typically /not/ be local. It would run on private or
+cloud servers. Servers might be housed nearby or far away as appropriate.
+
+1. A human user would express what they want accomplished to an AI coordinator.
+2. The coordinator would create a plan based on the available components and
+   present it in a simulation.
+3. This collaboration would continue until the human approved a plan.
+
+Once a plan was approved and scheduled
+1. The right number and kind of mobility elements (walking, rolling, flying,
+   etc.) along with the right kinds of sensors and effectors would be assembled
+   at the working area.
+2. The appropriate configurations would be assembled.
+3. Work would proceed.
+4. The particular mobility platforms employed and their configurations would
+   typically change as the work progressed.
+
+Consider relocating a heavy and awkward load
+- Multiple rolling mobility platforms would approach
+      - Sporting heavy-duty articulated arms with attached grippers
+      - Coupled to the platforms just for this task
+- The load would be gently lifted from multiple sides
+- The mobility platforms would move together to the desired location
+      - perfectly synchronized as if part of one body
+- The load would be gently placed into its new location
+
+Consider a complex assembly process, e.g. of an automobile
+- Mobility platforms would come and go as needed
+- Sporting various sensors and articulated arms as needed
+- Articulated arms would attach and detach various tools as needed.
+
+Consider the manufacturing processes of all of these robotic components
+- If all of the manufacturing processes are automated
+- Using the same components as are being manufactured
+- How inexpensive can these components become?
+- How casually can we use lots of them?
+
+Consider a "bucket brigade" virtual "conveyor belt"
+- Mobility platforms would form a line
+      - sporting appropriate "arms" and "hands"
+- Items would be tossed or "handed" from one robot to the next
+
+Many tasks
+- inspection or outdoor or large indoor spaces
+- tree trimming
+- etc.
+would make use of flying platforms.
+
+Aquatic tasks would make use of submersible platforms: It would usually be more
+efficient for aquatic robotic systems to operate underwater rather than float on
+the surface!
+
+Again, multiple mobile platforms (and some fixed platforms) would often work
+together to accomplish complex tasks.
+
+*One hand washes another*
+
+Robotic assemblies with the right composition would
+- configure other assemblies for specific tasks
+- reconfigure other assemblies as needed during a task
+- clean and refurbish other assemblies and one another
+
+** Links
+
+Hello Robot
+- [[https://hello-robot.com/stretch-3-whats-new][Hello Robot Stretch-3 Product]]
+      - Rolling mobility platform with 1 arm
+      - Multiple Stretch-3 robots can be used together
+- [[https://www.youtube.com/@HelloRobot/videos][Hello Robot Demo Videos]]
+
+Boston Dynamics
+- [[https://bostondynamics.com][Boston Dynamics website]]
+- [[https://www.youtube.com/@BostonDynamics][Boston Dynamics YouTube channel]]
+- [[https://www.youtube.com/watch?v=VBAK7Tdjd2E][Five Boston Dynamics Robots 3rd party video]]
+- Why doesn't Boston Dynamics show us their robots used in their own manufacturing?
+
+Fiction
+
+- /The Two Faces of Tomorrow/ by James P. Hogan
+Imagines an AI system which can control diverse automated systems with a broad
+range of capabilities including self-reproduction.

@@ -3,6 +3,8 @@
 I'll mostly allow /The Racket Guide/ to organize these notes.
 - The Guide provides most of the needed links into the Reference.
 
+** Cool Things To Hightlight
+
 * [[https://docs.racket-lang.org/guide][The Racket Guide]]
 
 ** [[https://docs.racket-lang.org/guide/intro.html][1 Welcome to Racket]]
@@ -108,3 +110,7 @@ What dialect is created by =#lang scheme=?
 - [[https://marketplace.visualstudio.com/items?itemName=evzen-wybitul.magic-racket][Magic Racket]]
 
 * [[https://docs.racket-lang.org/reference][The Racket Reference]]
+
+Ready for notes on things we discover in the Reference which are
+- not cool enough to put at the top
+- not covered by the Guide

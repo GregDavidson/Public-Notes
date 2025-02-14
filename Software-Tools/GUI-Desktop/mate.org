@@ -1,0 +1,18 @@
+* Mate Desktop Notes
+
+Be sure to install the mate-tweak tool!
+
+[[https://thelinuxcode.com/install-mate-desktop-ubuntu-22-04/][TheLinuxCode Mate 22.04 article]]
+- Go to /Customizing the MATE Desktop Layout/ section
+
+** Mate Issues
+
+*** Desktop stopped being shown
+
+No idea what changed.
+
+mate-tweak fixed this easily
+
+*** Window title bar no longer being shown
+
+No idea how to fix!

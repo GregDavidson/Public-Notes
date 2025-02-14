@@ -151,3 +151,30 @@ Note that you must make sure custom IDs, dedicated targets, and names are unique
 throughout the document. Org provides a linter to assist you in the process, if
 needed. See [[https://orgmode.org/manual/Org-Syntax.html][Org Syntax]].
 #+end_quote
+
+** Cool Features
+
+*** Examples with :
+
+A one-line examples
+   : Some example from a text file.
+
+as an alternative to
+
+A one-line example
+#+BEGIN_EXAMPLE
+  Some example from a text file.
+#+END_EXAMPLE
+
+*** Tag groups
+
+#+TAGS: [ GTD : Control Persp ]
+
+or, if tags in the group should be mutually exclusive:
+
+#+TAGS: { Context : @Home @Work }
+
+When you search for a group tag, it return matches for all members in the group
+and its subgroups. In an agenda view, filtering by a group tag displays or hide
+headlines tagged with at least one of the members of the group or any of its
+subgroups.

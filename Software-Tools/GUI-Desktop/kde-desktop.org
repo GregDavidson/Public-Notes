@@ -1,0 +1,10 @@
+* KDE GUI Desktop & Tools
+
+** KDE Features
+- Extremely Customizable
+- Large set of extensions including Widgets
+- Connectivity with multiple Devices on your network
+
+** Video Overviews & Demos
+- [[https://www.youtube.com/watch?v=dZ6bojRSIw0][KDE Plasma in 180 Seconds]]
+- [[https://www.youtube.com/watch?v=3nX1YEQg5Z0][10 ways KDE is just BETTER - TechHut]]

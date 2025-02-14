@@ -1,0 +1,13 @@
+* Newish Software Tools
+
+Software Tools more recent than the Unix days.
+
+** Markup Languages
+
+*** Typst
+
+[[https://github.com/typst/typst][typst/typst]]: TeX/LaTeX rebooted.
+
+- Not quite compatible
+- Seems much better all around otherwise
+- Comes with awesome preprocessors!

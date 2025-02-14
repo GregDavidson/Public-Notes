@@ -1,0 +1,19 @@
+* Video Capture & Editing Tools
+
+** Guvcview
+
+Doesn't work with the Webcam Laurence gave me.
+
+** Kdenlive
+
+Lynn recommends for editing, including adding side-streams.
+
+** OBS-Studio
+
+- Transitions
+- Multiple-inputs
+- Pre-editing, editing
+
+** Pipewire
+
+I have not yet begun to experiment with Pipewire.

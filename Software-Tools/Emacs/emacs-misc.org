@@ -1,0 +1,12 @@
+* EmAcs Miscp
+
+[2024-09-17 Tue 18:13]
+
+Something was wanting to be compiled.  The question was whether to do it now.
+The question and Yes were in RED; No was in BLUE.  WTF!?
+
+ ■  Warning (evil-collection): `evil-want-keybinding' was set to nil but not before loading evil.
+
+Make sure to set `evil-want-keybinding' to nil before loading evil or evil-collection.
+
+See https://github.com/emacs-evil/evil-collection/issues/60 for more details.

@@ -1,0 +1,3 @@
+* PostgreSQL Install Notes
+
+~/Projects/Wicci/Postgres/PG-Install-2/pg-install

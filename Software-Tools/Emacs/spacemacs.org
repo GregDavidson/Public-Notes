@@ -7,7 +7,7 @@
 | SP aka Spacebar | M-m aka Alt-m | Begin Spacemacs Binding |
 | SP u            | Ctrl-u        | Universal Argument      |
 
-- Toggle Evil :: =C-z=
+- Toggle Evil :: =C-z= or =M-x evil-normal-state=
 
 ** Handy Commands to Learn
 

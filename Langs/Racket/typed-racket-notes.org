@@ -3,6 +3,18 @@
 I'll mostly allow /The Typed Racket Guide/ to organize these notes.
 - The Guide provides most of the needed links into the Reference.
 
+** Cool Things To Hightlight
+
+*** [[https://docs.racket-lang.org/ts-reference/special-forms.html#(part._.Generating_.Predicates_.Automatically)][2.7 Generating Predicates Automatically]]
+
+- (make-predicate t) :: returns a predicate for the type t
+      - with the type =(Any -> Boolean : t)=
+      - t may not contain function types
+      - nor types that may refer to mutable data e.g. =(Vectorof Integer)=
+
+- (define-predicate name t) :: =(define name (make-predicate t))=
+
+
 * [[https://docs.racket-lang.org/ts-guide][The Typed Racket Guide]]
 
 ** [[https://docs.racket-lang.org/ts-guide/quick.html][1 Quick Start]]
@@ -695,9 +707,379 @@ You can use the [[https://docs.racket-lang.org/contract-profile][Contract Profil
 
 ** [[https://docs.racket-lang.org/ts-guide/caveats.html][8 Caveats and Limitations]]
 
-*** [[
+This section describes limitations and subtle aspects of the type system that programmers often stumble on while porting programs to Typed Racket.
 
-*** [[
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.The_.Integer_type_and_integer_%29][8.1 The Integer type and integer?]]
+
+The =Integer= type in Typed Racket
+- corresponds to the =exact-integer?= predicate
+- /not/ =integer?= which accepts inexact integers like =1.0=
+
+When porting a program to Typed Racket
+- you may need to replace uses of =round=, =floor=, etc.
+- with =exact-round=, =exact-floor=, etc.
+
+In other cases, it may be necessary to use assertions or casts.
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Type_inference_for_polymorphic_functions%29][8.2 Type inference for polymorphic functions]]
+
+Typed Racket’s local type inference algorithm is currently not able to infer
+types for polymorphic functions that are used on higher-order arguments that are
+themselves polymorphic.
+
+#+begin_example
+> (map cons '(a b c d) '(1 2 3 4))
+eval:2:0: Type Checker: Polymorphic function `map' could not
+be applied to arguments:
+Domains: (-> a b ... b c) (Listof a) (Listof b) ... b
+          (-> a c) (Pairof a (Listof a))
+Arguments: (All (a b) (case-> (-> a (Listof a) (Listof a))
+            (-> a b (Pairof a b)))) (List 'a 'b 'c 'd) (List One
+Positive-Byte Positive-Byte Positive-Byte)
+  in: 4
+#+end_example
+
+The issue is that the type of =cons= is also polymorphic:
+
+#+begin_example
+> cons
+- : (All (a b) (case-> (-> a (Listof a) (Listof a)) (-> a b (Pairof a b))))
+#<procedure:cons>
+#+end_example
+
+The =inst= form can instantiate the polymorphic argument:
+
+#+begin_example
+> (map (inst cons Symbol Integer) '(a b c d) '(1 2 3 4))
+- : (Listof (Pairof Symbol Integer))
+'((a . 1) (b . 2) (c . 3) (d . 4))
+#+end_example
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Typed-untyped_interaction_and_contract_generation%29][8.3 Typed-untyped interaction and contract generation]]
+
+When a typed module requires bindings from an untyped module (or vice-versa),
+there are some types that cannot be converted to a corresponding contract.
+
+Possible reasons:
+- a type is not yet supported in the contract system
+- Typed Racket’s contract generator has not been updated
+- the contract is too difficult to generate
+In some of these cases, the limitation will be fixed in a future release.
+
+#+begin_example
+> (require/typed racket/base
+    [object-name (case-> (-> Struct-Type-Property Symbol)
+                          (-> Regexp (U String Bytes)))])
+
+eval:5:0: Type Checker: Error in macro expansion -- Type
+(case-> (-> Struct-Type-Property Symbol) (-> Regexp (U Bytes String)))
+could not be converted to a contract:
+function type has two cases of arity 1
+  in: (case-> (-> Struct-Type-Property Symbol) (-> Regexp (U String Bytes)))
+#+end_example
+
+The corresponding contract is difficult to generate because
+- the check on the result depends on the check on the domain
+- In the future, this may be supported with dependent contracts
+
+A more approximate type will work for this case
+- but with a loss of type precision at use sites
+
+#+begin_src racket repl
+> (require/typed racket/base
+    [object-name (-> (U Struct-Type-Property Regexp)
+                      (U String Bytes Symbol))])
+> (object-name #rx"a regexp")
+- : (U Bytes String Symbol)
+"a regexp"
+#+end_src
+
+=define-predicate= also involves contract generation
+- some types cannot have predicates generated for them
+
+#+begin_example
+> (define-predicate p? (All (A) (Listof A)))
+eval:8:0: Type Checker: Error in macro expansion -- Type
+(All (A) (Listof A)) could not be converted to a predicate:
+cannot generate contract for non-function polymorphic type
+  in: (All (A) (Listof A))
+#+end_example
+
+So we have to write such a predicate by hand.
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Unsupported_features%29][8.4 Unsupported features]]
+
+Typed Racket currently (version 8.12) does not support generic interfaces.
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Type_generalization%29][8.5 Type generalization]]
+
+Typed Racket generalizes types that are used as arguments to invariant type
+constructors.  This may have unexpected consequences.
+
+#+begin_src racket repl
+> 0
+- : Integer [more precisely: Zero]
+0
+> (define b (box 0))
+> b
+- : (Boxof Integer)
+'#&0
+#+end_src
+
+- =0= has type =Zero=
+- =b= “should” have type =(Boxof Zero)=
+- not especially useful, only allowing 0 to be stored in the box
+Typed Racket assumes a more general intent.
+
+In some cases, however, type generalization can lead to unexpected results:
+
+#+begin_src racket repl
+> (box (ann 1 Fixnum))
+- : (Boxof Integer)
+'#&1
+#+end_src
+
+To retain the more specific type
+
+#+begin_src racket repl
+> (ann (box 1) (Boxof Fixnum))
+- : (Boxof Fixnum)
+'#&1
+> ((inst box Fixnum) 1)
+- : (Boxof Fixnum)
+'#&1
+#+end_src
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Macros_and_compile-time_computation%29][8.6 Macros and compile-time computation]]
+
+Expressions at compile-time are not checked!
+— this includes computations that occur inside macros!
+
+#+begin_src racket repl
+> (begin-for-syntax (+ 1 "foo"))
++: contract violation
+  expected: number?
+  given: "foo"
+#+end_src
+
+But the macro’s expansion is always type-checked:
+
+#+begin_src racket repl
+(define-syntax (example-1 stx) (+ 1 "foo") #'1)
+(define-syntax (example-2 stx) #'(+ 1 "foo"))
+
+> (example-1)
++: contract violation
+  expected: number?
+  given: "foo"
+
+> (example-2)
+eval:17:0: Type Checker: type mismatch
+  expected: Number
+  given: String
+  in: (quote "foo")
+#+end_src
+
+Functions defined in Typed Racket that are used at compile-time in
+other typed modules or untyped modules will be type-checked and then protected
+with contracts as described in Typed-Untyped Interaction.
+
+Macros defined in Typed Racket modules cannot be used in ordinary Racket modules
+because such uses can circumvent the protections of the type system.
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Expensive_contract_boundaries%29][8.7 Expensive contract boundaries]]
+
+Contract boundaries installed for typed-untyped interaction may cause
+significant slowdowns. See [[https://docs.racket-lang.org/ts-guide/optimization.html#%28part._contract-costs%29][Contract boundaries]] for details.
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._.Pattern_.Matching_and_.Occurrence_.Typing%29][8.8 Pattern Matching and Occurrence Typing]]
+
+Because Typed Racket type checks code after macro expansion, certain forms—such as match—are difficult for Typed Racket to reason about completely. In particular, in a match clause, the type of an identifier is often not updated to reflect the fact that a previous pattern failed to match. For example, in the following function, the type checker is unaware that if execution reaches the last clause then the string? predicate has already failed to match on the value for x, and so (abs x) in the last clause fails to type check:
+
+#+begin_src racket repl
+> (: size (-> (U String Integer) Integer))
+> (define (size x)
+    (match x
+      [(? string?) (string-length x)]
+      [_ (abs x)]))
+
+eval:21:0: Type Checker: type mismatch
+  expected: Integer
+  given: (U Integer String)
+  in: x
+#+end_src
+
+Because they are much simpler forms, similar cond and if expressions do type check successfully:
+
+#+begin_src racket repl
+> (: size (-> (U String Integer) Integer))
+> (define (size x)
+      (cond
+        [(string? x) (string-length x)]
+        [else (abs x)]))
+#+end_src
+
+One work around is to simply not rely on a catch-all "else" clause that needs to know that previous patterns have failed to match in order to type check:
+
+#+begin_src racket repl
+> (: size (-> (U String Integer) Integer))
+> (define (size x)
+      (match x
+        [(? string?) (string-length x)]
+        [(? exact-integer?) (abs x)]))
+#+end_src
+
+It is important to note, however, that match always inserts a catch-all failure clause if one is not provided! This means that the type checker will not inform the programmer that match clause coverage is insufficient because the implicit (i.e. macro-inserted) failure clause will cover any cases the programmer failed to anticipate with their pattern matching, e.g.:
+
+#+begin_src racket repl
+> (: size (-> (U String Integer) Integer))
+> (define (size x)
+      (match x
+        [(? string?) (string-length x)]))
+> (size 42)
+
+match: no matching clause for 42
+#+end_src
+
+Patterns involving an ellipsis ... for repetition may generate a for loop that requires annotations on variables to type check. The (deliberately obscure) code below does not type check without the type annotation on the match pattern variable c.
+
+#+begin_src racket
+(: do-nothing (-> (Listof Integer) (Listof Integer)))
+(define (do-nothing lst)
+  (match lst
+    [(list (? number? #{c : (Listof Integer)}) ...)   c]))
+#+end_src
+
+*** [[https://docs.racket-lang.org/ts-guide/caveats.html#%28part._is-a__and_.Occurrence_.Typing%29][8.9 is-a? and Occurrence Typing]]
+
+Typed Racket does not use the is-a? predicate to refine object types because the target object may have been created in untyped code and is-a? does not check the types of fields and methods.
+
+For example, the code below defines a class type Pizza%, a subclass type Sauce-Pizza%, and a function get-sauce (this function contains a type error). The get-sauce function uses is-a? to test the class of its argument; if the test is successful, the function expects the argument to have a field named topping that contains a value of type Sauce.
+
+#+begin_src racket
+#lang typed/racket
+
+(define-type Pizza%
+  (Class (field [topping Any])))
+
+(define-type Sauce
+  (U 'tomato 'bbq 'no-sauce))
+
+(define-type Sauce-Pizza%
+  (Class #:implements Pizza% (field [topping Sauce])))
+
+(define sauce-pizza% : Sauce-Pizza%
+  (class object%
+    (super-new)
+    (field [topping 'tomato])))
+
+(define (get-sauce [pizza : (Instance Pizza%)]) : Sauce
+  (cond
+    [(is-a? pizza sauce-pizza%)
+      (get-field topping pizza)] ; type error
+    [else
+      'bbq]))
+#+end_src
+
+The type-error message explains that (get-field topping pizza) can return any kind of value, even when pizza is an instance of the sauce-pizza% class. In particular, pizza could be an instance of an untyped subclass that sets its topping to the integer 0:
+
+#+begin_src racket
+; #lang racket
+(define evil-pizza%
+  (class sauce-pizza%
+    (inherit-field topping)
+    (super-new)
+    (set! topping 0)))
+#+end_src
+
+To downcast as intended
+- add a cast after the is-a? test.
+
+Below is a complete example that
+- passes the type checker
+- raises a run-time error
+- prevents =get-sauce= from returning a non-Sauce value
+
+Examples:
+
+#+begin_src racket repl
+> (module pizza typed/racket
+    (provide get-sauce sauce-pizza%)
+
+    (define-type Pizza%
+      (Class (field [topping Any])))
+
+    (define-type Sauce
+      (U 'tomato 'bbq 'no-sauce))
+
+    (define-type Sauce-Pizza%
+      (Class #:implements Pizza% (field [topping Sauce])))
+
+    (define sauce-pizza% : Sauce-Pizza%
+      (class object%
+        (super-new)
+        (field [topping 'tomato])))
+
+    (define (get-sauce [pizza : (Instance Pizza%)]) : Sauce
+      (cond
+        [(is-a? pizza sauce-pizza%)
+          (define p+ (cast pizza (Instance Sauce-Pizza%)))
+          (get-field topping p+)]
+        [else
+          'no-sauce])))
+> (require 'pizza)
+> (define evil-pizza%
+    (class sauce-pizza%
+      (inherit-field topping)
+      (super-new)
+      (set! topping 0)))
+> (get-sauce (new evil-pizza%))
+
+sauce-pizza%: broke its own contract
+  promised: (or/c (quote no-sauce) (quote bbq) (quote tomato))
+  produced: 0
+  in: the topping field in
+      (recursive-contract g40 #:impersonator)
+  contract from: pizza
+  blaming: pizza
+    (assuming the contract is correct)
+  at: eval:1:0
+#+end_src
+
+See [[https://docs.racket-lang.org/ts-reference/special-forms.html#%28form._%28%28lib._typed-racket%2Fbase-env%2Fprims..rkt%29._cast%29%29][(cast e t)]] in the Reference.
 
 
 * [[https://docs.racket-lang.org/ts-reference][The Typed Racket Reference]]
+
+Ready for notes on things we discover in the Reference which are
+- not cool enough to put at the top
+- not covered by the Guide
+
+** [[https://docs.racket-lang.org/ts-reference/special-forms.html#%28part._.Type_.Annotation_and_.Instantiation%29][2.8 Type Annotation and Instantiation]]
+
+- (: v t) :: v has type t
+- (: v : t) :: v has function type t
+
+#+begin_src racket
+(: v1 Integer)
+(: f1 : -> Integer)
+(: f2 : String -> Integer)
+#+end_src
+
+- (provide: [v t] ...) :: provides and declares each v with its types t
+
+- (ann e t) :: Ensure that e has type t, or some subtype.
+- The entire expression has type t.
+
+- (cast e t) :: The expression has type t, contract enforced.
+
+See the details in the Reference!
+
+- (inst e t ...) or (inst e t ... t ooo bound) :: instantiate the type of e
+- with types t ... or poly-dotted types t ... t ooo bound
+- e of polymorphic type applicable to supplied type variables
+- For non-poly-dotted functions
+      - fewer arguments can be provided
+      - omitted types default to Any
+
+- (row-inst e row) :: Instantiate the row-polymorphic type of e with row

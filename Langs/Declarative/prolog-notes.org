@@ -1,0 +1,7 @@
+* Prolog Notes
+
+** Educational Resources
+- [[https://cliplab.org/~logalg/doc/The_Art_of_Prolog.pdf][The Art of Prolog]]
+      - Excellent classic book on Prolog Programming
+      - Now free
+- [[https://cliplab.org/logalg][Computational Logic Learning Resources on Ciao Website]]

@@ -1,0 +1,13 @@
+* GUI-Desktop Notes
+
+** Want
+
+- Programmable with Rules including Constraints
+      - Steal selector notation from CSS?
+- Tags instead of workspaces
+      - Tags for Activities, etc.
+      - Can presence multiple Tags
+            - specifying screen if desired
+- Locating frames on screen or in containing frames,
+      - Tree!
+      - Arbitrary docking

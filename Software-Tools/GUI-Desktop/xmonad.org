@@ -1,0 +1,8 @@
+* XMonad
+
+** Video Demos
+
+*** [[https://www.youtube.com/watch?v=70IxjLEmomg][XMonad demo by Ethan Schoonover]]
+
+Shows how to use TAB and \ keys as hybrid keys
+- when held down, equates to Hyper or Super as desired
